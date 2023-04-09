@@ -8,7 +8,6 @@ import random
 
 # Dictionary with all images used in the game
 hangman_img = {
-
     10: "img/Hangman_10.png",
     9: "img/Hangman_09.png",
     8: "img/Hangman_08.png",
@@ -20,7 +19,8 @@ hangman_img = {
     2: "img/Hangman_02.png",
     1: "img/Hangman_01.png",
     0: "img/Hangman_00.png",
-
+    "splash": "img/splash.png",
+    "close": "img/close.png"
 }
 
 # Install "Young.ttf" (main folder) for best experience, but app will still work without it :)
@@ -30,31 +30,33 @@ sg.theme("black")
 
 # Define the layout for the splash screen
 splash_layout = [
-    [sg.Image("img/splash.png")],
+    [sg.Image(hangman_img["splash"])],
     [sg.Button("START", font=font_used,
                border_width=0,
                key="-START-",
-               button_color="white")]]
+               button_color="white")]
+]
 
 # Create the splash screen window
-splash_window = sg.Window('Hangman', splash_layout,
-                          size=(300, 550),
+splash_window = sg.Window('Splash', splash_layout,
+                          size=(300, 570),
+                          element_justification="center",
+                          finalize=True,
                           no_titlebar=True,
                           grab_anywhere=True,
-                          keep_on_top=True,
-                          element_justification='center')
+                          keep_on_top=True)
 
 # Show the splash screen and wait for the start button to be pressed
 while True:
     event, values = splash_window.read()
-    if event == 'START':
+    if event == "-START-":
         break
 
 # Close the splash screen window
 splash_window.close()
 
 # Main Game Layout
-game_layout = [
+game_layout = [[sg.VPush()],
     [sg.Push(), sg.Image("img/close.png",  # Close button
                          pad=0, enable_events=True, key="-CLOSE-")],
     [sg.VPush()],
@@ -77,7 +79,7 @@ game_layout = [
 ]
 
 window = sg.Window("Hangman Game", game_layout,
-                   size=(300, 550),
+                   size=(300, 570),
                    element_justification="center",
                    finalize=True,
                    no_titlebar=True,
@@ -89,9 +91,9 @@ def hangman():
 
     # list with alphabet
     alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
-                'M', 'N', 'O', 'P', 'R', 'S', 'T', 'U', 'W', 'X', 'Y', 'Z',
+                'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'W', 'X', 'Y', 'Z',
                 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
-                'm', 'n', 'o', 'p', 'r', 's', 't', 'u', 'w', 'x', 'y', 'z']
+                'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'w', 'x', 'y', 'z']
     # word choice
     word = random.choice(world_list).upper()
     # word letters as list
@@ -148,7 +150,7 @@ def hangman():
                         window["-OUT-"].update("Wygrałeś! Brawo!")
                         points += 1
                         window["-POINTS-"].update(str(points))
-                        sg.popup("Wygrana, losuję nowe słowo", font=font_used)
+                        sg.popup("Wygrana, losuję nowe słowo", font=font_used, keep_on_top=True)
                         hangman()
                 # lost condition
                 else:
@@ -159,7 +161,7 @@ def hangman():
                     window["-WORD-"].update("".join(word_blanks), font="Young 24")
                     if lives == 0:
                         window["-OUT-"].update("Przegrałeś!")
-                        sg.popup(f"Przegrana. Losuję nowe słowo, słowo to: {word}", font=font_used)
+                        sg.popup(f"Przegrana. Losuję nowe słowo, słowo to: {word}", font=font_used, keep_on_top=True)
                         hangman()
             # output if letter already been chosen
             else:
