@@ -135,7 +135,7 @@ def hangman():
 
                 # Check if user_input is in word_letters list
                 if user_input in word_letters:
-                    window["-OUT-"].update("Zgadłeś literę. Brawo")
+                    window["-OUT-"].update("Great guess, letter found")
 
                     # find indexes of correctly guessed letter
                     for i, letter in enumerate(word_letters):
@@ -147,25 +147,25 @@ def hangman():
 
                     # win condition
                     if "".join(word_blanks) == "".join(word_letters):
-                        window["-OUT-"].update("Wygrałeś! Brawo!")
+                        window["-OUT-"].update("Fantastic, You Won!")
                         points += 1
                         window["-POINTS-"].update(str(points))
-                        sg.popup("Wygrana, losuję nowe słowo", font=font_used, keep_on_top=True)
+                        sg.popup("You won, Choosing new word...", font=font_used, keep_on_top=True)
                         hangman()
                 # lost condition
                 else:
                     lives = lives - 1
-                    window["-OUT-"].update("Pudło, spróbuj jeszcze raz")
+                    window["-OUT-"].update("Wrong, Try again!")
                     window["-HANGMAN-"].update(hangman_img[lives])
                     window["-LIVES-"].update(lives)
                     window["-WORD-"].update("".join(word_blanks), font="Young 24")
                     if lives == 0:
                         window["-OUT-"].update("Przegrałeś!")
-                        sg.popup(f"Przegrana. Losuję nowe słowo, słowo to: {word}", font=font_used, keep_on_top=True)
+                        sg.popup(f"You lost, {word} was not guessed\nChoosing new word", font=font_used, keep_on_top=True)
                         hangman()
             # output if letter already been chosen
             else:
-                window["-OUT-"].update("Ta litera już była.")
+                window["-OUT-"].update("Letter used already !")
 
     window.close()
 
