@@ -56,7 +56,8 @@ while True:
 splash_window.close()
 
 # Main Game Layout
-game_layout = [[sg.VPush()],
+game_layout = [
+    [sg.VPush()],
     [sg.Push(), sg.Image("img/close.png",  # Close button
                          pad=0, enable_events=True, key="-CLOSE-")],
     [sg.VPush()],
@@ -65,7 +66,7 @@ game_layout = [[sg.VPush()],
     [sg.Text("letters used", font=font_used)],
     [sg.Text("", key="-USED-LETTERS-", font=font_used)],
     [sg.Text("lives", font=font_used),
-     sg.Text("10", key="-LIVES-", font="Young 16", text_color="green"),
+     sg.Text("", key="-LIVES-", font="Young 16", text_color="green"),
      sg.Push(),
      sg.Text("0", key="-POINTS-", font="Young 16", text_color="green"),
      sg.Text("points", font=font_used)],
@@ -147,10 +148,10 @@ def hangman():
 
                     # win condition
                     if "".join(word_blanks) == "".join(word_letters):
-                        window["-OUT-"].update("Fantastic, You Won!")
                         points += 1
+                        window["-OUT-"].update("Fantastic, You Won!")
                         window["-POINTS-"].update(str(points))
-                        sg.popup("You won, Choosing new word...", font=font_used, keep_on_top=True)
+                        sg.popup("YOU WON, Choosing new word...", font=font_used, keep_on_top=True)
                         hangman()
                 # lost condition
                 else:
@@ -160,8 +161,9 @@ def hangman():
                     window["-LIVES-"].update(lives)
                     window["-WORD-"].update("".join(word_blanks), font="Young 24")
                     if lives == 0:
-                        window["-OUT-"].update("Przegrałeś!")
-                        sg.popup(f"You lost, {word} was not guessed\nChoosing new word", font=font_used, keep_on_top=True)
+                        window["-OUT-"].update("You lost")
+                        sg.popup(f"YOU LOST \nword: {word} was not guessed\nChoosing new word",
+                                 font=font_used, keep_on_top=True)
                         hangman()
             # output if letter already been chosen
             else:
