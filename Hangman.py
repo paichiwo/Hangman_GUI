@@ -3,7 +3,7 @@
 # Hangman_GUI main game file with application layout and game logic
 
 from Wordlist import world_list
-import PySimpleGUI as sg
+import PySimpleGUI as psg
 import random
 import requests
 import time, sys
@@ -28,7 +28,7 @@ hangman_img = {
 # Install "Young.ttf" (main folder) for best experience, but app will still work without it :)
 font_used = "Young"
 # Create window layout with PySimpleGUI
-sg.theme("black")
+psg.theme("black")
 
 
 def secret_word_api():
@@ -59,20 +59,20 @@ def word_api_or_random():
 def splash_screen():
     # Define the layout for the splash screen
     splash_layout = [
-        [sg.Image(hangman_img["splash"])],
-        [sg.Button("START", font=f"{font_used} 16",
-                   border_width=0,
-                   key="-START-",
-                   button_color="white")]
+        [psg.Image(hangman_img["splash"])],
+        [psg.Button("START", font=f"{font_used} 16",
+                    border_width=0,
+                    key="-START-",
+                    button_color="white")]
     ]
     # Create the splash screen window
-    splash_window = sg.Window('Splash', splash_layout,
-                              size=(300, 570),
-                              element_justification="center",
-                              finalize=True,
-                              no_titlebar=True,
-                              grab_anywhere=True,
-                              keep_on_top=True)
+    splash_window = psg.Window('Splash', splash_layout,
+                               size=(300, 570),
+                               element_justification="center",
+                               finalize=True,
+                               no_titlebar=True,
+                               grab_anywhere=True,
+                               keep_on_top=True)
     # Show the splash screen and wait for the start button to be pressed
     while True:
         event, values = splash_window.read()
@@ -87,35 +87,35 @@ def game_window(points):
 
     # Main Game Layout
     game_layout = [
-        [sg.VPush()],
-        [sg.Push(), sg.Image("img/close.png",  # Close button
-                             pad=0, enable_events=True, key="-CLOSE-")],
-        [sg.VPush()],
-        [sg.Image((hangman_img[10]), key="-HANGMAN-")],
-        [sg.Text("", key="-WORD-", font=f"{font_used} 20")],
-        [sg.Text("letters used", font=font_used)],
-        [sg.Text("", key="-USED-LETTERS-", font=font_used)],
-        [sg.Text("lives", font=font_used),
-         sg.Text("", key="-LIVES-", font=f"{font_used} 16", text_color="green"),
-         sg.Push(),
-         sg.Text(str(points), key="-POINTS-", font=f"{font_used} 16", text_color="green"),
-         sg.Text("points", font=font_used)],
-        [sg.Text("guess a letter:", font=font_used)],
-        [sg.Input("", size=(10, 1),
-                  enable_events=True,
-                  key="-INPUT-")],
-        [sg.Button('Submit', visible=False, bind_return_key=True)],
-        [sg.Text("", key="-OUTPUT-MSG-", font="Any 10", text_color="yellow")],
-        [sg.VPush()]
+        [psg.VPush()],
+        [psg.Push(), psg.Image("img/close.png",  # Close button
+                               pad=0, enable_events=True, key="-CLOSE-")],
+        [psg.VPush()],
+        [psg.Image((hangman_img[10]), key="-HANGMAN-")],
+        [psg.Text("", key="-WORD-", font=f"{font_used} 20")],
+        [psg.Text("letters used", font=font_used)],
+        [psg.Text("", key="-USED-LETTERS-", font=font_used)],
+        [psg.Text("lives", font=font_used),
+         psg.Text("", key="-LIVES-", font=f"{font_used} 16", text_color="green"),
+         psg.Push(),
+         psg.Text(str(points), key="-POINTS-", font=f"{font_used} 16", text_color="green"),
+         psg.Text("points", font=font_used)],
+        [psg.Text("guess a letter:", font=font_used)],
+        [psg.Input("", size=(10, 1),
+                   enable_events=True,
+                   key="-INPUT-")],
+        [psg.Button('Submit', visible=False, bind_return_key=True)],
+        [psg.Text("", key="-OUTPUT-Msg-", font="Any 10", text_color="yellow")],
+        [psg.VPush()]
     ]
 
-    window = sg.Window("Hangman Game", game_layout,
-                       size=(300, 570),
-                       element_justification="center",
-                       finalize=True,
-                       no_titlebar=True,
-                       grab_anywhere=True,
-                       keep_on_top=True)
+    window = psg.Window("Hangman Game", game_layout,
+                        size=(300, 570),
+                        element_justification="center",
+                        finalize=True,
+                        no_titlebar=True,
+                        grab_anywhere=True,
+                        keep_on_top=True)
     return window
 
 
@@ -149,7 +149,7 @@ def hangman(points=0):
         window["-LIVES-"].update(lives)
 
         event, values = window.read()
-        if event in (sg.WIN_CLOSED, "-CLOSE-"):
+        if event in (psg.WIN_CLOSED, "-CLOSE-"):
             break
 
         # accepts only one character, must be from alphabet
@@ -168,7 +168,7 @@ def hangman(points=0):
 
                 # Check if user_input is in word_letters list
                 if user_input in word_letters:
-                    window["-OUTPUT-MSG-"].update("Great guess, letter found")
+                    window["-OUTPUT-Msg-"].update("Great guess, letter found")
 
                     # find indexes of correctly guessed letter
                     for i, letter in enumerate(word_letters):
@@ -182,31 +182,31 @@ def hangman(points=0):
                     if "".join(word_blanks) == "".join(word_letters):
                         points += 1
                         window["-POINTS-"].update(str(points))
-                        sg.popup(f"YOU WON, Choosing new word...in 5s",
-                                 font=font_used, keep_on_top=True,
-                                 no_titlebar=True,
-                                 auto_close=True,
-                                 auto_close_duration=5)
+                        psg.popup(f"YOU WON, Choosing new word...in 5s",
+                                  font=font_used, keep_on_top=True,
+                                  no_titlebar=True,
+                                  auto_close=True,
+                                  auto_close_duration=5)
                         window.close()
                         hangman(points)
                 # lost condition
                 else:
                     lives = lives - 1
-                    window["-OUTPUT-MSG-"].update("Wrong, Try again!")
+                    window["-OUTPUT-Msg-"].update("Wrong, Try again!")
                     window["-HANGMAN-"].update(hangman_img[lives])
                     window["-LIVES-"].update(lives)
                     window["-WORD-"].update("".join(word_blanks), font=f"{font_used} 24")
                     if lives == 0:
-                        sg.popup(f"YOU LOST \n{word} was not guessed\nChoosing new word...in 5s",
-                                 font=font_used, keep_on_top=True,
-                                 no_titlebar=True,
-                                 auto_close=True,
-                                 auto_close_duration=5)
+                        psg.popup(f"YOU LOST \n{word} was not guessed\nChoosing new word...in 5s",
+                                  font=font_used, keep_on_top=True,
+                                  no_titlebar=True,
+                                  auto_close=True,
+                                  auto_close_duration=5)
                         window.close()
                         hangman(points)
             # output if letter already been chosen
             else:
-                window["-OUTPUT-MSG-"].update("Letter used already !")
+                window["-OUTPUT-Msg-"].update("Letter used already !")
 
     window.close()
 
