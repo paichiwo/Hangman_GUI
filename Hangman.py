@@ -2,11 +2,18 @@
 
 # Hangman_GUI main game file with application layout and game logic
 
+# Add feature - check meaning of secret words in wikipedia or english dictionary
+# Make start button nicer
+# Make hangman art nicer and change resolution from 200x300 to 280x280/280x300
+# Check if is possible to add image or something while loading from API
+# Experiment with new mono font
+# Experiment with upper/lower case
+# Fix bug - app closing. reason: image loading failure ???
+
 from Wordlist import world_list
 import PySimpleGUI as psg
 import random
 import requests
-import time, sys
 
 # Dictionary with all images used in the game
 hangman_img = {
@@ -184,7 +191,6 @@ def hangman(points=0):
                         window["-POINTS-"].update(str(points))
                         psg.popup(f"YOU WON, Choosing new word...in 5s",
                                   font=font_used, keep_on_top=True,
-                                  no_titlebar=True,
                                   auto_close=True,
                                   auto_close_duration=5)
                         window.close()
@@ -199,7 +205,6 @@ def hangman(points=0):
                     if lives == 0:
                         psg.popup(f"YOU LOST \n{word} was not guessed\nChoosing new word...in 5s",
                                   font=font_used, keep_on_top=True,
-                                  no_titlebar=True,
                                   auto_close=True,
                                   auto_close_duration=5)
                         window.close()
