@@ -6,6 +6,7 @@ from Wordlist import world_list
 import PySimpleGUI as sg
 import random
 import requests
+import time, sys
 
 # Dictionary with all images used in the game
 hangman_img = {
@@ -29,8 +30,6 @@ font_used = "Young"
 # Create window layout with PySimpleGUI
 sg.theme("black")
 
-
-# points = 0
 
 def secret_word_api():
     url = "https://random-word-api.herokuapp.com/word"
@@ -106,7 +105,7 @@ def game_window(points):
                   enable_events=True,
                   key="-INPUT-")],
         [sg.Button('Submit', visible=False, bind_return_key=True)],
-        [sg.Text("", key="-OUT-", font="Any 10", text_color="yellow")],
+        [sg.Text("", key="-OUTPUT-MSG-", font="Any 10", text_color="yellow")],
         [sg.VPush()]
     ]
 
@@ -126,9 +125,9 @@ def hangman(points=0):
 
     # list with alphabet
     alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
-                'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'W', 'X', 'Y', 'Z',
+                'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
                 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
-                'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'w', 'x', 'y', 'z']
+                'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
     # word choice
     word = word_api_or_random()
     print(word)
@@ -169,7 +168,7 @@ def hangman(points=0):
 
                 # Check if user_input is in word_letters list
                 if user_input in word_letters:
-                    window["-OUT-"].update("Great guess, letter found")
+                    window["-OUTPUT-MSG-"].update("Great guess, letter found")
 
                     # find indexes of correctly guessed letter
                     for i, letter in enumerate(word_letters):
@@ -182,27 +181,32 @@ def hangman(points=0):
                     # win condition
                     if "".join(word_blanks) == "".join(word_letters):
                         points += 1
-                        window["-OUT-"].update("Fantastic, You Won!")
                         window["-POINTS-"].update(str(points))
-                        sg.popup("YOU WON, Choosing new word...", font=font_used, keep_on_top=True)
+                        sg.popup(f"YOU WON, Choosing new word...in 5s",
+                                 font=font_used, keep_on_top=True,
+                                 no_titlebar=True,
+                                 auto_close=True,
+                                 auto_close_duration=5)
                         window.close()
                         hangman(points)
                 # lost condition
                 else:
                     lives = lives - 1
-                    window["-OUT-"].update("Wrong, Try again!")
+                    window["-OUTPUT-MSG-"].update("Wrong, Try again!")
                     window["-HANGMAN-"].update(hangman_img[lives])
                     window["-LIVES-"].update(lives)
                     window["-WORD-"].update("".join(word_blanks), font=f"{font_used} 24")
                     if lives == 0:
-                        window["-OUT-"].update("You lost")
-                        sg.popup(f"YOU LOST \nword: {word} was not guessed\nChoosing new word",
-                                 font=font_used, keep_on_top=True)
+                        sg.popup(f"YOU LOST \n{word} was not guessed\nChoosing new word...in 5s",
+                                 font=font_used, keep_on_top=True,
+                                 no_titlebar=True,
+                                 auto_close=True,
+                                 auto_close_duration=5)
                         window.close()
                         hangman(points)
             # output if letter already been chosen
             else:
-                window["-OUT-"].update("Letter used already !")
+                window["-OUTPUT-MSG-"].update("Letter used already !")
 
     window.close()
 
