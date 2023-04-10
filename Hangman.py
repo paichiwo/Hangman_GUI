@@ -30,6 +30,8 @@ font_used = "Young"
 sg.theme("black")
 
 
+points = 0
+
 def secret_word_api():
     url = "https://random-word-api.herokuapp.com/word"
     response = requests.get(url)
@@ -84,6 +86,7 @@ def splash_screen():
 
 def game_window():
     # Main Game Layout
+    global points
     game_layout = [
         [sg.VPush()],
         [sg.Push(), sg.Image("img/close.png",  # Close button
@@ -96,9 +99,9 @@ def game_window():
         [sg.Text("lives", font=font_used),
          sg.Text("", key="-LIVES-", font=f"{font_used} 16", text_color="green"),
          sg.Push(),
-         sg.Text("0", key="-POINTS-", font=f"{font_used} 16", text_color="green"),
+         sg.Text(str(points), key="-POINTS-", font=f"{font_used} 16", text_color="green"),
          sg.Text("points", font=font_used)],
-        [sg.Text("Guess a letter:", font=font_used)],
+        [sg.Text("guess a letter:", font=font_used)],
         [sg.Input("", size=(10, 1),
                   enable_events=True,
                   key="-INPUT-")],
@@ -136,7 +139,7 @@ def hangman():
     # number of lives
     lives = 10
     # points
-    points = 0
+    global points
     # letters already used
     guessed_letters = ""
 
@@ -184,6 +187,7 @@ def hangman():
                         window["-OUT-"].update("Fantastic, You Won!")
                         window["-POINTS-"].update(str(points))
                         sg.popup("YOU WON, Choosing new word...", font=font_used, keep_on_top=True)
+                        window.close()
                         hangman()
                 # lost condition
                 else:
@@ -196,6 +200,7 @@ def hangman():
                         window["-OUT-"].update("You lost")
                         sg.popup(f"YOU LOST \nword: {word} was not guessed\nChoosing new word",
                                  font=font_used, keep_on_top=True)
+                        window.close()
                         hangman()
             # output if letter already been chosen
             else:
