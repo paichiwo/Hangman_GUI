@@ -30,7 +30,7 @@ font_used = "Young"
 sg.theme("black")
 
 
-points = 0
+# points = 0
 
 def secret_word_api():
     url = "https://random-word-api.herokuapp.com/word"
@@ -84,15 +84,15 @@ def splash_screen():
     splash_window.close()
 
 
-def game_window():
+def game_window(points):
+
     # Main Game Layout
-    global points
     game_layout = [
         [sg.VPush()],
         [sg.Push(), sg.Image("img/close.png",  # Close button
                              pad=0, enable_events=True, key="-CLOSE-")],
         [sg.VPush()],
-        [sg.Image(hangman_img[0], key="-HANGMAN-")],
+        [sg.Image((hangman_img[10]), key="-HANGMAN-")],
         [sg.Text("", key="-WORD-", font=f"{font_used} 20")],
         [sg.Text("letters used", font=font_used)],
         [sg.Text("", key="-USED-LETTERS-", font=font_used)],
@@ -120,9 +120,9 @@ def game_window():
     return window
 
 
-def hangman():
+def hangman(points=0):
 
-    window = game_window()
+    window = game_window(points)
 
     # list with alphabet
     alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
@@ -138,8 +138,6 @@ def hangman():
     word_blanks = ["_"] * len(word)
     # number of lives
     lives = 10
-    # points
-    global points
     # letters already used
     guessed_letters = ""
 
@@ -188,7 +186,7 @@ def hangman():
                         window["-POINTS-"].update(str(points))
                         sg.popup("YOU WON, Choosing new word...", font=font_used, keep_on_top=True)
                         window.close()
-                        hangman()
+                        hangman(points)
                 # lost condition
                 else:
                     lives = lives - 1
@@ -201,7 +199,7 @@ def hangman():
                         sg.popup(f"YOU LOST \nword: {word} was not guessed\nChoosing new word",
                                  font=font_used, keep_on_top=True)
                         window.close()
-                        hangman()
+                        hangman(points)
             # output if letter already been chosen
             else:
                 window["-OUT-"].update("Letter used already !")
