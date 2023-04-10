@@ -59,7 +59,7 @@ def splash_screen():
     # Define the layout for the splash screen
     splash_layout = [
         [sg.Image(hangman_img["splash"])],
-        [sg.Button("START", font=font_used,
+        [sg.Button("START", font=f"{font_used} 16",
                    border_width=0,
                    key="-START-",
                    button_color="white")]
@@ -90,13 +90,13 @@ def game_window():
                              pad=0, enable_events=True, key="-CLOSE-")],
         [sg.VPush()],
         [sg.Image(hangman_img[0], key="-HANGMAN-")],
-        [sg.Text("", key="-WORD-", font="Young 20")],
+        [sg.Text("", key="-WORD-", font=f"{font_used} 20")],
         [sg.Text("letters used", font=font_used)],
         [sg.Text("", key="-USED-LETTERS-", font=font_used)],
         [sg.Text("lives", font=font_used),
-         sg.Text("", key="-LIVES-", font="Young 16", text_color="green"),
+         sg.Text("", key="-LIVES-", font=f"{font_used} 16", text_color="green"),
          sg.Push(),
-         sg.Text("0", key="-POINTS-", font="Young 16", text_color="green"),
+         sg.Text("0", key="-POINTS-", font=f"{font_used} 16", text_color="green"),
          sg.Text("points", font=font_used)],
         [sg.Text("Guess a letter:", font=font_used)],
         [sg.Input("", size=(10, 1),
@@ -144,7 +144,7 @@ def hangman():
     while lives > 0:
 
         window["-HANGMAN-"].update(hangman_img[lives])
-        window["-WORD-"].update("".join(word_blanks), font="Young 24")
+        window["-WORD-"].update("".join(word_blanks), font=f"{font_used} 24")
         window["-USED-LETTERS-"].update(", ".join(guessed_letters))
         window["-LIVES-"].update(lives)
 
@@ -176,7 +176,7 @@ def hangman():
                         if word_letters[i] == user_input:
                             word_blanks[i] = word[i]
                     # output updated word
-                    window["-WORD-"].update("".join(word_blanks), font="Young 24")
+                    window["-WORD-"].update("".join(word_blanks), font=f"{font_used} 24")
 
                     # win condition
                     if "".join(word_blanks) == "".join(word_letters):
@@ -184,7 +184,6 @@ def hangman():
                         window["-OUT-"].update("Fantastic, You Won!")
                         window["-POINTS-"].update(str(points))
                         sg.popup("YOU WON, Choosing new word...", font=font_used, keep_on_top=True)
-                        window.close()
                         hangman()
                 # lost condition
                 else:
@@ -192,12 +191,11 @@ def hangman():
                     window["-OUT-"].update("Wrong, Try again!")
                     window["-HANGMAN-"].update(hangman_img[lives])
                     window["-LIVES-"].update(lives)
-                    window["-WORD-"].update("".join(word_blanks), font="Young 24")
+                    window["-WORD-"].update("".join(word_blanks), font=f"{font_used} 24")
                     if lives == 0:
                         window["-OUT-"].update("You lost")
                         sg.popup(f"YOU LOST \nword: {word} was not guessed\nChoosing new word",
                                  font=font_used, keep_on_top=True)
-                        window.close()
                         hangman()
             # output if letter already been chosen
             else:
