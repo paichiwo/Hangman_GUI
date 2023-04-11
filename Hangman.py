@@ -50,7 +50,6 @@ def secret_word_api():
 
 
 def word_api_or_random():
-
     try:
         word = secret_word_api().upper()
     # Error handling
@@ -91,7 +90,6 @@ def splash_screen():
 
 
 def game_window(points):
-
     # Main Game Layout
     game_layout = [
         [psg.VPush()],
@@ -127,7 +125,6 @@ def game_window(points):
 
 
 def hangman(points=0):
-
     window = game_window(points)
 
     # list with alphabet
@@ -175,7 +172,7 @@ def hangman(points=0):
 
                 # Check if user_input is in word_letters list
                 if user_input in word_letters:
-                    window["-OUTPUT-Msg-"].update("Great guess, letter found")
+                    window["-OUTPUT-Msg-"].update("Good guess, letter found")
 
                     # find indexes of correctly guessed letter
                     for i, letter in enumerate(word_letters):
@@ -189,7 +186,7 @@ def hangman(points=0):
                     if "".join(word_blanks) == "".join(word_letters):
                         points += 1
                         window["-POINTS-"].update(str(points))
-                        psg.popup(f"YOU WON, Choosing new word...in 5s",
+                        psg.popup(f"YOU WON! Choosing new word in 5s",
                                   font=font_used, keep_on_top=True,
                                   auto_close=True,
                                   auto_close_duration=5)
@@ -198,12 +195,12 @@ def hangman(points=0):
                 # lost condition
                 else:
                     lives = lives - 1
-                    window["-OUTPUT-Msg-"].update("Wrong, Try again!")
+                    window["-OUTPUT-Msg-"].update("Wrong, try again!")
                     window["-HANGMAN-"].update(hangman_img[lives])
                     window["-LIVES-"].update(lives)
                     window["-WORD-"].update("".join(word_blanks), font=f"{font_used} 24")
                     if lives == 0:
-                        psg.popup(f"YOU LOST \n{word} was not guessed\nChoosing new word...in 5s",
+                        psg.popup(f"YOU LOST!\n{word} was not guessed.\nChoosing new word in 5s",
                                   font=font_used, keep_on_top=True,
                                   auto_close=True,
                                   auto_close_duration=5)
@@ -211,7 +208,7 @@ def hangman(points=0):
                         hangman(points)
             # output if letter already been chosen
             else:
-                window["-OUTPUT-Msg-"].update("Letter used already !")
+                window["-OUTPUT-Msg-"].update("letter used already !")
 
     window.close()
 
