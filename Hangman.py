@@ -5,11 +5,11 @@
 # Make start button nicer
 # Check if is possible to add image or something while loading from API
 # Fix bug - app closing. reason: image loading failure ???
-# More elegant way for alphabet
 
 from Wordlist import world_list
 import PySimpleGUI as psg
 import random
+import string
 import requests
 import webbrowser
 
@@ -145,10 +145,7 @@ def hangman(points=0):
     window = game_window(points)
 
     # list with alphabet
-    alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
-                'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-                'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
-                'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+    alphabet = string.ascii_letters
     # secret word
     word = word_api_or_random()
     print(word)
@@ -222,8 +219,10 @@ def hangman(points=0):
                     window["-LIVES-"].update(lives)
                     window["-WORD-"].update("".join(word_blanks), font=(font_used[0], 25))
                     if lives == 0:
-                        choice = psg.popup_yes_no(f"YOU LOST! \nDo you want to find the meaning\nof the word: {word} ?\n",
-                                                  font=font_used, keep_on_top=True)
+                        choice = psg.popup_yes_no(
+                            f"YOU LOST! \nDo you want to find the meaning\nof the word: {word} ?\n",
+                            font=font_used, keep_on_top=True
+                        )
                         if choice == "Yes":
                             webbrowser.open(link)
                             window.close()
