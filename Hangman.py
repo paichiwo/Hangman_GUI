@@ -2,9 +2,8 @@
 
 # Hangman_GUI main game file with application layout and game logic
 
-# Make start button nicer
-# Check if is possible to add image or something while loading from API
-# Fix bug - app closing. reason: image loading failure ???
+# ** Make start button nicer
+# * Check if is possible to add image or something while loading from API
 
 from Wordlist import world_list
 import PySimpleGUI as psg
@@ -66,7 +65,7 @@ def word_api_or_random():
 
 
 def check_word_meaning_link(word):
-
+    # Create link to check the meaning of the secret word
     url = f"https://www.google.com/search?q={word.lower()}+meaning"
     return url
 
@@ -142,6 +141,7 @@ def game_window(points):
 
 def hangman(points=0):
     # Game logic
+
     window = game_window(points)
 
     # list with alphabet
@@ -160,13 +160,13 @@ def hangman(points=0):
     # letters already used
     guessed_letters = ""
 
+    window["-WORD-"].update("".join(word_blanks), font=(font_used[0], 25))
+    window["-USED-LETTERS-"].update(", ".join(guessed_letters))
+    window["-HANGMAN-"].update(hangman_img[lives])
+    window["-LIVES-"].update(str(lives))
+
     # Main Loop
     while lives > 0:
-
-        window["-HANGMAN-"].update(hangman_img[lives])
-        window["-WORD-"].update("".join(word_blanks), font=(font_used[0], 25))
-        window["-USED-LETTERS-"].update(", ".join(guessed_letters))
-        window["-LIVES-"].update(lives)
 
         event, values = window.read()
         if event in (psg.WIN_CLOSED, "-CLOSE-"):
