@@ -2,7 +2,6 @@
 
 # Hangman_GUI main game file with application layout and game logic
 
-# Add feature - check meaning of secret words in wikipedia or english dictionary
 # Make start button nicer
 # Check if is possible to add image or something while loading from API
 # Fix bug - app closing. reason: image loading failure ???
@@ -11,6 +10,9 @@ from Wordlist import world_list
 import PySimpleGUI as psg
 import random
 import requests
+import webbrowser
+
+version = "beta"
 
 # Dictionary with all images used in the game
 hangman_img = {
@@ -62,6 +64,12 @@ def word_api_or_random():
     return word
 
 
+def check_word_meaning_link(word):
+
+    url = f"https://www.google.com/search?q={word.lower()}+meaning"
+    return url
+
+
 def splash_screen():
     # Define the layout for the splash screen
     splash_layout = [
@@ -69,7 +77,12 @@ def splash_screen():
         [psg.Button("START", font=(font_used[0], 16),
                     border_width=0,
                     key="-START-",
-                    button_color="white")]
+                    button_color="white")],
+        [psg.VPush()],
+        [psg.Text(f"Version: {version}", font=(font_used[0], 9))],
+        [psg.Text("Click to visit my GitHub",
+                  font=font_used, text_color="light green",
+                  enable_events=True, key="-LINK-")]
     ]
     # Create the splash screen window
     splash_window = psg.Window('Splash', splash_layout,
@@ -84,6 +97,8 @@ def splash_screen():
         event, values = splash_window.read()
         if event == "-START-":
             break
+        elif event in "-LINK-":
+            webbrowser.open("https://github.com/paichiwo")
 
     # Close the splash screen window
     splash_window.close()
@@ -133,9 +148,11 @@ def hangman(points=0):
                 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
                 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
                 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
-    # word choice
+    # secret word
     word = word_api_or_random()
     print(word)
+    # create a google search link for user to check the meaning of the secret word
+    link = check_word_meaning_link(word)
     # word letters as list
     word_letters = [letter for letter in word]
     # word blanks as list
@@ -187,12 +204,15 @@ def hangman(points=0):
                     if "".join(word_blanks) == "".join(word_letters):
                         points += 1
                         window["-POINTS-"].update(str(points))
-                        psg.popup(f"YOU WON! Choosing new word in 5s",
-                                  font=font_used, keep_on_top=True,
-                                  auto_close=True,
-                                  auto_close_duration=5)
-                        window.close()
-                        hangman(points)
+                        choice = psg.popup_yes_no(f"YOU WON! \nFind the meaning of: {word} ?\n",
+                                                  font=font_used, keep_on_top=True)
+                        if choice == "Yes":
+                            webbrowser.open(link)
+                            window.close()
+                            hangman(points)
+                        else:
+                            window.close()
+                            hangman(points)
                 # lost condition
                 else:
                     lives = lives - 1
@@ -201,12 +221,15 @@ def hangman(points=0):
                     window["-LIVES-"].update(lives)
                     window["-WORD-"].update("".join(word_blanks), font=(font_used[0], 25))
                     if lives == 0:
-                        psg.popup(f"YOU LOST!\n{word} was the secret word.\nChoosing new word in 5s",
-                                  font=font_used, keep_on_top=True,
-                                  auto_close=True,
-                                  auto_close_duration=5)
-                        window.close()
-                        hangman(points)
+                        choice = psg.popup_yes_no(f"YOU LOST! \nDo you want to find the meaning\nof the word: {word} ?\n",
+                                                  font=font_used, keep_on_top=True)
+                        if choice == "Yes":
+                            webbrowser.open(link)
+                            window.close()
+                            hangman(points)
+                        else:
+                            window.close()
+                            hangman(points)
             # output if letter already been chosen
             else:
                 window["-OUTPUT-Msg-"].update("Letter used already!")
