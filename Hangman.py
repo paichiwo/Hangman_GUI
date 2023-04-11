@@ -5,6 +5,7 @@
 # Make start button nicer
 # Check if is possible to add image or something while loading from API
 # Fix bug - app closing. reason: image loading failure ???
+# More elegant way for alphabet
 
 from Wordlist import world_list
 import PySimpleGUI as psg
@@ -151,7 +152,7 @@ def hangman(points=0):
     # secret word
     word = word_api_or_random()
     print(word)
-    # create a google search link for user to check the meaning of the secret word
+    # create a Google search link for user to check the meaning of the secret word
     link = check_word_meaning_link(word)
     # word letters as list
     word_letters = [letter for letter in word]
