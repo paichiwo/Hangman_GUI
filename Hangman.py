@@ -6,8 +6,6 @@
 # Make start button nicer
 # Make hangman art nicer and change resolution from 200x300 to 280x280/280x300
 # Check if is possible to add image or something while loading from API
-# Experiment with new mono font
-# Experiment with upper/lower case
 # Fix bug - app closing. reason: image loading failure ???
 
 from Wordlist import world_list
@@ -32,24 +30,27 @@ hangman_img = {
     "close": "img/close.png"
 }
 
-# Install "Young.ttf" (main folder) for best experience, but app will still work without it :)
-font_used = "Young"
-# Create window layout with PySimpleGUI
+# Customization
+# Install "RobotoMono-Regular.ttf" (main folder) for best experience, but app will still work without it :)
+font_used = ('Roboto Mono', 10)
+# Change theme
 psg.theme("black")
 
 
 def secret_word_api():
+    # Get secret word from API and choose only words <= 12 characters long
     url = "https://random-word-api.herokuapp.com/word"
     response = requests.get(url)
     text = response.json()
     word = text[0]
-    if len(word) <= 11:
+    if len(word) <= 12:
         return word
     else:
         return secret_word_api()
 
 
 def word_api_or_random():
+    # Error handling in case API didn't work for some reason
     try:
         word = secret_word_api().upper()
     # Error handling
@@ -66,7 +67,7 @@ def splash_screen():
     # Define the layout for the splash screen
     splash_layout = [
         [psg.Image(hangman_img["splash"])],
-        [psg.Button("START", font=f"{font_used} 16",
+        [psg.Button("START", font=(font_used[0], 16),
                     border_width=0,
                     key="-START-",
                     button_color="white")]
@@ -97,23 +98,23 @@ def game_window(points):
                                pad=0, enable_events=True, key="-CLOSE-")],
         [psg.VPush()],
         [psg.Image((hangman_img[10]), key="-HANGMAN-")],
-        [psg.Text("", key="-WORD-", font=f"{font_used} 20")],
-        [psg.Text("letters used", font=font_used)],
-        [psg.Text("", key="-USED-LETTERS-", font=font_used)],
-        [psg.Text("lives", font=font_used),
-         psg.Text("", key="-LIVES-", font=f"{font_used} 16", text_color="green"),
+        [psg.Text("", key="-WORD-", font=(font_used[0], 25))],
+        [psg.Text("USED LETTERS:", font=font_used)],
+        [psg.Text("", key="-USED-LETTERS-", font=(font_used, 9))],
+        [psg.Text("LIVES", font=font_used),
+         psg.Text("", key="-LIVES-", font=(font_used[0], 16), text_color="green"),
          psg.Push(),
-         psg.Text(str(points), key="-POINTS-", font=f"{font_used} 16", text_color="green"),
-         psg.Text("points", font=font_used)],
-        [psg.Text("guess a letter:", font=font_used)],
+         psg.Text(str(points), key="-POINTS-", font=(font_used[0], 16), text_color="green"),
+         psg.Text("POINTS", font=font_used)],
+        [psg.Text("GUESS A LETTER:", font=font_used)],
         [psg.Input("", size=(10, 1),
                    enable_events=True,
                    key="-INPUT-")],
         [psg.Button('Submit', visible=False, bind_return_key=True)],
-        [psg.Text("", key="-OUTPUT-Msg-", font="Any 10", text_color="yellow")],
+        [psg.Text("", key="-OUTPUT-Msg-", font=font_used, text_color="yellow")],
         [psg.VPush()]
     ]
-
+    # Create main game window
     window = psg.Window("Hangman Game", game_layout,
                         size=(300, 570),
                         element_justification="center",
@@ -125,6 +126,7 @@ def game_window(points):
 
 
 def hangman(points=0):
+    # Game logic
     window = game_window(points)
 
     # list with alphabet
@@ -148,7 +150,7 @@ def hangman(points=0):
     while lives > 0:
 
         window["-HANGMAN-"].update(hangman_img[lives])
-        window["-WORD-"].update("".join(word_blanks), font=f"{font_used} 24")
+        window["-WORD-"].update("".join(word_blanks), font=(font_used[0], 25))
         window["-USED-LETTERS-"].update(", ".join(guessed_letters))
         window["-LIVES-"].update(lives)
 
@@ -180,7 +182,7 @@ def hangman(points=0):
                         if word_letters[i] == user_input:
                             word_blanks[i] = word[i]
                     # output updated word
-                    window["-WORD-"].update("".join(word_blanks), font=f"{font_used} 24")
+                    window["-WORD-"].update("".join(word_blanks), font=(font_used[0], 25))
 
                     # win condition
                     if "".join(word_blanks) == "".join(word_letters):
@@ -198,7 +200,7 @@ def hangman(points=0):
                     window["-OUTPUT-Msg-"].update("Wrong, try again!")
                     window["-HANGMAN-"].update(hangman_img[lives])
                     window["-LIVES-"].update(lives)
-                    window["-WORD-"].update("".join(word_blanks), font=f"{font_used} 24")
+                    window["-WORD-"].update("".join(word_blanks), font=(font_used[0], 25))
                     if lives == 0:
                         psg.popup(f"YOU LOST!\n{word} was not guessed.\nChoosing new word in 5s",
                                   font=font_used, keep_on_top=True,
