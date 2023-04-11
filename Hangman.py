@@ -4,7 +4,6 @@
 
 # Add feature - check meaning of secret words in wikipedia or english dictionary
 # Make start button nicer
-# Make hangman art nicer and change resolution from 200x300 to 280x280/280x300
 # Check if is possible to add image or something while loading from API
 # Fix bug - app closing. reason: image loading failure ???
 
@@ -202,7 +201,7 @@ def hangman(points=0):
                     window["-LIVES-"].update(lives)
                     window["-WORD-"].update("".join(word_blanks), font=(font_used[0], 25))
                     if lives == 0:
-                        psg.popup(f"YOU LOST!\n{word} was not guessed.\nChoosing new word in 5s",
+                        psg.popup(f"YOU LOST!\n{word} was the secret word.\nChoosing new word in 5s",
                                   font=font_used, keep_on_top=True,
                                   auto_close=True,
                                   auto_close_duration=5)
@@ -210,7 +209,7 @@ def hangman(points=0):
                         hangman(points)
             # output if letter already been chosen
             else:
-                window["-OUTPUT-Msg-"].update("letter used already !")
+                window["-OUTPUT-Msg-"].update("Letter used already!")
 
     window.close()
 
