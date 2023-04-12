@@ -2,6 +2,7 @@
 
 # Hangman_GUI main game file with application layout and game logic
 
+# *** ADD FEATURE - High Score
 # ** Make start button nicer
 # * Check if is possible to add image or something while loading from API
 

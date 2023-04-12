@@ -1,0 +1,1 @@
+{"Lukas": 5, "Asia": 5, "Darek": 6, "Eryk": 8, "Maja": 7, "Filip": 9, "b": 1, "Rat": 2, "Gwidon": 12, "Gacek": 20, "a": 2, "Henryk": 12}
