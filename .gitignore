@@ -1,0 +1,5 @@
+# Pycharm files
+.idea/
+venv/
+# Personal temp file
+/brudnopis.py
