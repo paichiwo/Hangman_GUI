@@ -56,11 +56,7 @@ def word_api_or_random():
     try:
         word = secret_word_api().upper()
     # Error handling
-    except requests.ConnectionError:
-        word = random.choice(world_list).upper()
-    except requests.HTTPError:
-        word = random.choice(world_list).upper()
-    except requests.exceptions.JSONDecodeError:
+    except (requests.ConnectionError, requests.HTTPError, requests.exceptions.JSONDecodeError):
         word = random.choice(world_list).upper()
     return word
 
@@ -98,7 +94,7 @@ def splash_screen():
         event, values = splash_window.read()
         if event == "-START-":
             break
-        elif event in "-LINK-":
+        elif event == "-LINK-":
             webbrowser.open("https://github.com/paichiwo")
 
     # Close the splash screen window
@@ -153,7 +149,7 @@ def hangman(points=0):
     # create a Google search link for user to check the meaning of the secret word
     link = check_word_meaning_link(word)
     # word letters as list
-    word_letters = [letter for letter in word]
+    word_letters = list(word)
     # word blanks as list
     word_blanks = ["_"] * len(word)
     # number of lives
@@ -207,11 +203,8 @@ def hangman(points=0):
                                                   font=font_used, keep_on_top=True)
                         if choice == "Yes":
                             webbrowser.open(link)
-                            window.close()
-                            hangman(points)
-                        else:
-                            window.close()
-                            hangman(points)
+                        window.close()
+                        hangman(points)
                 # lost condition
                 else:
                     lives = lives - 1
@@ -222,15 +215,12 @@ def hangman(points=0):
                     if lives == 0:
                         choice = psg.popup_yes_no(
                             f"YOU LOST! \nDo you want to find the meaning\nof the word: {word} ?\n",
-                            font=font_used, keep_on_top=True
-                        )
+                            font=font_used, keep_on_top=True)
                         if choice == "Yes":
                             webbrowser.open(link)
-                            window.close()
-                            hangman(points)
-                        else:
-                            window.close()
-                            hangman(points)
+                        window.close()
+                        hangman(points)
+
             # output if letter already been chosen
             else:
                 window["-OUTPUT-Msg-"].update("Letter used already!")
