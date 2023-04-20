@@ -29,7 +29,7 @@ Clone the repository and change to the project directory
 `font_used` can be changed to any desired font from your OS.  
 `psg.theme` can also be changed to any desired color. [List of themes](https://media.geeksforgeeks.org/wp-content/uploads/20200511200254/f19.jpg).
 
-![](https://33333.cdn.cke-cs.com/kSW7V9NHUXugvhoQeFaf/images/293dff4b9c68dfe21a1d26ee26224feb428709b55baa3732.png)
+![](screenshot/hang0.png)
 
 ## How to Play
 
@@ -53,4 +53,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Examples
 
-![](https://33333.cdn.cke-cs.com/kSW7V9NHUXugvhoQeFaf/images/7238f6481b7ec0af334f3b663fbfd30a23b28e1d4c9b343a.png)      ![](https://33333.cdn.cke-cs.com/kSW7V9NHUXugvhoQeFaf/images/59daefbbd7c0a40c5835ac1d4d7c1e6b478f445e1afcbadf.png)
+![](screenshot/hang1.png)      ![](screenshot/hang2.png)
