@@ -43,6 +43,21 @@ The game will add one point for each correctly guessed word.
 
 When the round completes, the game will ask if the user wishes to find the meaning of the word.
 
+## **Contributing**
+
+Contributions are always welcome and appreciated! If you find any issues or have suggestions for improvements, please feel free to open an issue or pull request on the GitHub repository.
+
+To contribute, please follow these steps:
+
+1.  Fork the repository to your own GitHub account.
+2.  Clone the repository to your local machine.
+3.  Create a new branch for your changes.
+4.  Make your changes and commit them with clear commit messages.
+5.  Push your changes to your forked repository.
+6.  Open a pull request to the main repository.
+
+Please ensure that your code is well-documented, tested, and follows the existing code style and guidelines. By contributing, you agree to release your code under the same MIT license as the original code.
+
 ## Authors
 
 Lukasz Zerucha - [https://github.com/paichiwo](https://github.com/paichiwo)
