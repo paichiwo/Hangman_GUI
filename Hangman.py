@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
+import json
 
 # Hangman_GUI main game file with application layout and game logic
 
 # *** ADD FEATURE - High Score
 # ** Make start button nicer
-# * Check if is possible to add image or something while loading from API
+# * Check if is possible to add an image or something while loading from API
 
 from Wordlist import world_list
+from deep_translator import GoogleTranslator
 import PySimpleGUI as psg
 import random
 import string
@@ -29,14 +31,32 @@ hangman_img = {
     1: "img/Hangman_01.png",
     0: "img/Hangman_00.png",
     "splash": "img/splash.png",
-    "close": "img/close.png"
+    "close": "img/close.png",
+    "settings": "img/settings.png"
 }
 
-# Customization
-# Install "RobotoMono-Regular.ttf" (main folder) for best experience, but app will still work without it :)
+
+# Install "RobotoMono-Regular.ttf" (main folder) for the best experience, but the app will still work without it :)
 font_used = ('Roboto Mono', 10)
 # Change theme
 psg.theme("black")
+
+
+def load_settings():
+    with open('settings.json', 'r') as settings_file:
+        settings = json.load(settings_file)
+        return settings[0]
+
+
+def save_settings(settings_dict):
+    with open('settings.json', 'w') as settings_file:
+        json.dump(settings_dict, settings_file)
+
+
+def translate_eng_to_pol(word):
+    my_translator = GoogleTranslator(source='auto', target='polish')
+    result = my_translator.translate(text=word)
+    return result
 
 
 def secret_word_api():
@@ -62,7 +82,7 @@ def word_api_or_random():
 
 
 def check_word_meaning_link(word):
-    # Create link to check the meaning of the secret word
+    # Create a link to check the meaning of the secret word
     url = f"https://www.google.com/search?q={word.lower()}+meaning"
     return url
 
@@ -101,12 +121,43 @@ def splash_screen():
     splash_window.close()
 
 
+def settings_window():
+
+    layout = [
+        [psg.Text('SETTINGS', font=(font_used, 12))],
+        [psg.Text("")],
+        [psg.Text('Select Language:')],
+        [psg.DropDown(['English', 'Polish'], default_value='English', key='-LANGUAGE-')],
+        [psg.Text("")],
+        [psg.Button('Save')]
+    ]
+
+    window = psg.Window('Settings', layout, resizable=False, finalize=True, keep_on_top=True, element_justification='c')
+
+    while True:
+        event, values = window.read()
+        if event == psg.WINDOW_CLOSED:
+            break
+
+        elif event == 'Save':
+            language = values['-LANGUAGE-']
+            save_settings({'language': language})
+
+    window.close()
+
+
 def game_window(points):
     # Main Game Layout
     game_layout = [
         [psg.VPush()],
-        [psg.Push(), psg.Image("img/close.png",  # Close button
-                               pad=0, enable_events=True, key="-CLOSE-")],
+        [psg.Button(image_filename=hangman_img['settings'],
+                    pad=0,
+                    border_width=0,
+                    button_color='black',
+                    enable_events=True,
+                    key='-SETTINGS-'),
+         psg.Push(),
+         psg.Image(hangman_img['close'], pad=0, enable_events=True, key="-CLOSE-")],
         [psg.VPush()],
         [psg.Image((hangman_img[10]), key="-HANGMAN-")],
         [psg.Text("", key="-WORD-", font=(font_used[0], 25))],
@@ -125,7 +176,7 @@ def game_window(points):
         [psg.Text("", key="-OUTPUT-Msg-", font=font_used, text_color="yellow")],
         [psg.VPush()]
     ]
-    # Create main game window
+    # Create the main game window
     window = psg.Window("Hangman Game", game_layout,
                         size=(300, 570),
                         element_justification="center",
@@ -148,9 +199,9 @@ def hangman(points=0):
     print(word)
     # create a Google search link for user to check the meaning of the secret word
     link = check_word_meaning_link(word)
-    # word letters as list
+    # word letters as a list
     word_letters = list(word)
-    # word blanks as list
+    # word blanks as a list
     word_blanks = ["_"] * len(word)
     # number of lives
     lives = 10
@@ -169,7 +220,10 @@ def hangman(points=0):
         if event in (psg.WIN_CLOSED, "-CLOSE-"):
             break
 
-        # accepts only one character, must be from alphabet
+        elif event == '-SETTINGS-':
+            settings_window()
+
+        # accepts only one character must be from the alphabet
         if len(values["-INPUT-"]) > 1 or values["-INPUT-"] not in alphabet:
             # delete last char from input
             window["-INPUT-"].update(values["-INPUT-"][:-1])
@@ -183,11 +237,11 @@ def hangman(points=0):
                 guessed_letters += user_input
                 window["-USED-LETTERS-"].update(", ".join(guessed_letters))
 
-                # Check if user_input is in word_letters list
+                # Check if user_input is in the word_letters list
                 if user_input in word_letters:
                     window["-OUTPUT-Msg-"].update("Good guess, letter found")
 
-                    # find indexes of correctly guessed letter
+                    # find indexes of a correctly guessed letter
                     for i, letter in enumerate(word_letters):
                         # and replace blanks with letters
                         if word_letters[i] == user_input:
@@ -221,7 +275,7 @@ def hangman(points=0):
                         window.close()
                         hangman(points)
 
-            # output if letter already been chosen
+            # output if a letter already been chosen
             else:
                 window["-OUTPUT-Msg-"].update("Letter used already!")
 
