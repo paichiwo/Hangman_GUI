@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import json
 
 # Hangman_GUI main game file with application layout and game logic
 
@@ -9,7 +8,9 @@ import json
 
 from Wordlist import world_list
 from deep_translator import GoogleTranslator
+from lang.EN import EN
 import PySimpleGUI as psg
+import json
 import random
 import string
 import requests
@@ -45,7 +46,7 @@ psg.theme("black")
 def load_settings():
     with open('settings.json', 'r') as settings_file:
         settings = json.load(settings_file)
-        return settings[0]
+        return settings['language']
 
 
 def save_settings(settings_dict):
@@ -88,51 +89,70 @@ def check_word_meaning_link(word):
 
 
 def splash_screen():
-    # Define the layout for the splash screen
+    # layout for the splash screen
     splash_layout = [
         [psg.Image(hangman_img["splash"])],
-        [psg.Button("START", font=(font_used[0], 16),
-                    border_width=0,
-                    key="-START-",
-                    button_color="white")],
+        [psg.Button(
+            "START",
+            font=(font_used[0], 16),
+            border_width=0,
+            key="-START-",
+            button_color="white")],
         [psg.VPush()],
-        [psg.Text(f"Version: {version}", font=(font_used[0], 9))],
-        [psg.Text("Click to visit my GitHub",
-                  font=font_used, text_color="light green",
-                  enable_events=True, key="-LINK-")]
+        [psg.Text(
+            f"{EN['splash.window.version']} {version}",
+            font=(font_used[0], 9))],
+        [psg.Text(
+            "Click to visit my GitHub",
+            font=font_used,
+            text_color="light green",
+            enable_events=True,
+            key="-LINK-")]
     ]
-    # Create the splash screen window
-    splash_window = psg.Window('Splash', splash_layout,
-                               size=(300, 570),
-                               element_justification="center",
-                               finalize=True,
-                               no_titlebar=True,
-                               grab_anywhere=True,
-                               keep_on_top=True)
-    # Show the splash screen and wait for the start button to be pressed
+
+    splash_window = psg.Window(
+        'Splash',
+        splash_layout,
+        size=(300, 570),
+        element_justification="center",
+        finalize=True,
+        no_titlebar=True,
+        grab_anywhere=True,
+        keep_on_top=True)
+
     while True:
         event, values = splash_window.read()
-        if event == "-START-":
+        if event == '-START-':
             break
-        elif event == "-LINK-":
+        elif event == '-LINK-':
             webbrowser.open("https://github.com/paichiwo")
 
-    # Close the splash screen window
     splash_window.close()
 
 
 def settings_window():
 
     layout = [
-        [psg.Text('SETTINGS', font=(font_used, 12))],
+        [psg.Text(
+            "SETTINGS",
+            font=(font_used, 12))],
         [psg.Text("")],
-        [psg.Text('Select Language:')],
-        [psg.DropDown(['English', 'Polish'], default_value='English', key='-LANGUAGE-')],
+        [psg.Text("Select Language:")],
+        [psg.DropDown(
+            ["EN', 'PL"],
+            default_value="EN",
+            key='-LANGUAGE-')],
         [psg.Text("")],
-        [psg.Button('Save')]
+        [psg.Button("Save")]
     ]
 
-    window = psg.Window('Settings', layout, resizable=False, finalize=True, keep_on_top=True, element_justification='c')
+    window = psg.Window(
+        'Settings',
+        layout,
+        resizable=False,
+        finalize=True,
+        keep_on_top=True,
+        element_justification='c')
 
     while True:
         event, values = window.read()
@@ -150,40 +170,80 @@ def game_window(points):
     # Main Game Layout
     game_layout = [
         [psg.VPush()],
-        [psg.Button(image_filename=hangman_img['settings'],
-                    pad=0,
-                    border_width=0,
-                    button_color='black',
-                    enable_events=True,
-                    key='-SETTINGS-'),
+        [psg.Button(
+            image_filename=hangman_img['settings'],
+            pad=0,
+            border_width=0,
+            button_color='black',
+            enable_events=True,
+            key='-SETTINGS-'),
          psg.Push(),
-         psg.Image(hangman_img['close'], pad=0, enable_events=True, key="-CLOSE-")],
+         psg.Image(
+             hangman_img['close'],
+             pad=0,
+             enable_events=True,
+             key="-CLOSE-")],
         [psg.VPush()],
-        [psg.Image((hangman_img[10]), key="-HANGMAN-")],
-        [psg.Text("", key="-WORD-", font=(font_used[0], 25))],
-        [psg.Text("USED LETTERS:", font=font_used)],
-        [psg.Text("", key="-USED-LETTERS-", font=(font_used, 9))],
-        [psg.Text("LIVES", font=font_used),
-         psg.Text("", key="-LIVES-", font=(font_used[0], 16), text_color="green"),
+        [psg.Image(
+            hangman_img[10],
+            key="-HANGMAN-")],
+        [psg.Text(
+            "",
+            key="-WORD-",
+            font=(font_used[0], 25))],
+        [psg.Text(
+            "USED LETTERS:",
+            font=font_used)],
+        [psg.Text(
+            "",
+            key="-USED-LETTERS-",
+            font=(font_used, 9))],
+        [psg.Text(
+            "LIVES",
+            font=font_used),
+         psg.Text(
+             "",
+             key="-LIVES-",
+             font=(font_used[0], 16),
+             text_color="green"),
          psg.Push(),
-         psg.Text(str(points), key="-POINTS-", font=(font_used[0], 16), text_color="green"),
-         psg.Text("POINTS", font=font_used)],
-        [psg.Text("GUESS A LETTER:", font=font_used)],
-        [psg.Input("", size=(10, 1),
-                   enable_events=True,
-                   key="-INPUT-")],
-        [psg.Button('Submit', visible=False, bind_return_key=True)],
-        [psg.Text("", key="-OUTPUT-Msg-", font=font_used, text_color="yellow")],
+         psg.Text(
+             str(points),
+             key="-POINTS-",
+             font=(font_used[0], 16),
+             text_color="green"),
+         psg.Text(
+             "POINTS",
+             font=font_used)],
+        [psg.Text(
+            "GUESS A LETTER:",
+            font=font_used)],
+        [psg.Input(
+            "",
+            size=(10, 1),
+            enable_events=True,
+            key="-INPUT-")],
+        [psg.Button(
+            'Submit',
+            visible=False,
+            bind_return_key=True)],
+        [psg.Text(
+            "",
+            key="-OUTPUT-Msg-",
+            font=font_used,
+            text_color="yellow")],
         [psg.VPush()]
     ]
     # Create the main game window
-    window = psg.Window("Hangman Game", game_layout,
-                        size=(300, 570),
-                        element_justification="center",
-                        finalize=True,
-                        no_titlebar=True,
-                        grab_anywhere=True,
-                        keep_on_top=True)
+    window = psg.Window(
+        "Hangman Game",
+        game_layout,
+        size=(300, 570),
+        element_justification="center",
+        finalize=True,
+        no_titlebar=True,
+        grab_anywhere=True,
+        keep_on_top=True)
     return window
 
 
