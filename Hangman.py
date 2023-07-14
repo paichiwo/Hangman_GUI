@@ -16,7 +16,7 @@ import string
 import requests
 import webbrowser
 
-version = "beta"
+version = "1.0"
 
 # Dictionary with all images used in the game
 hangman_img = {
@@ -103,14 +103,14 @@ def check_word_meaning_link(word, language):
 def splash_screen(language):
     # layout for the splash screen
     splash_layout = [
-        [psg.Button(
-            image_filename=hangman_img['settings'],
-            pad=(0, 2),
-            border_width=0,
-            button_color='black',
-            enable_events=True,
-            key='-SETTINGS-'),
-            psg.Push()],
+        [psg.Push(),
+         psg.Button(
+             image_filename=hangman_img['settings'],
+             pad=(0, 2),
+             border_width=0,
+             button_color='black',
+             enable_events=True,
+             key='-SETTINGS-')],
         [psg.Image(hangman_img['splash'])],
         [psg.Button(
             localization[language]['splash.window.start_button'],
@@ -163,6 +163,9 @@ def settings_window(lang):
         [psg.DropDown(
             ["EN", "PL"],
             default_value=lang,
+            text_color='black',
+            background_color='light grey',
+
             key='-LANGUAGE-')],
         [psg.Text("")],
         [psg.Button(localization[lang]['settings.window.save_button'])]
