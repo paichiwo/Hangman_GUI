@@ -358,10 +358,12 @@ def hangman(points=0):
 
     window.close()
 
+
 def main():
     if __name__ == '__main__':
         language = load_settings()
         splash_screen(language)
         hangman()
+
 
 main()
