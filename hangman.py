@@ -59,14 +59,14 @@ def word_api_or_random(language):
     """Get secret word from wordlist.py if the API fails for any reason"""
 
     try:
-        word = secret_word_api().upper()
+        word = secret_word_api()
     except (requests.ConnectionError, requests.HTTPError, requests.exceptions.JSONDecodeError):
-        word = random.choice(word_list).upper()
+        word = random.choice(word_list)
 
     if language == 'EN':
-        return word
+        return word.upper()
     elif language == 'PL':
-        return translate_eng_to_pol(word)
+        return translate_eng_to_pol(word).upper().split(" ")[0]
 
 
 def check_word_meaning_link(word, language):
@@ -97,17 +97,17 @@ def splash_screen(language):
         [psg.Image(hangman_img['splash_logo'])],
         [psg.Button(
             localization[language]['splash.window.start_button'],
-            font=(font_used[0], 16),
+            font=(font_used[0], 18),
             border_width=0,
             button_color='white',
             key='-START-')],
         [psg.VPush()],
         [psg.Text(
-            f"{localization[language]['splash.window.version']} {version}",
-            font=(font_used[0], 9))],
+            f"{localization[language]['splash.window.version']}: {version}",
+            font=(font_used[0], 11))],
         [psg.Text(
             localization[language]['splash.window.github_link'],
-            font=font_used,
+            font=(font_used[0], 11),
             text_color='light green',
             enable_events=True,
             key='-LINK-')]
@@ -116,7 +116,7 @@ def splash_screen(language):
     splash_window = psg.Window(
         'Splash',
         splash_layout,
-        size=(300, 570),
+        size=(300, 575),
         element_justification='center',
         finalize=True,
         no_titlebar=True,
@@ -183,11 +183,11 @@ def game_window(language, points):
     """Layout for the game window"""
 
     game_layout = [
-        [psg.VPush()],
+        # [psg.VPush()],
         [psg.Push(),
          psg.Image(
              hangman_img['close_icon'],
-             pad=0,
+             pad=(0, 4),
              enable_events=True,
              key='-CLOSE-')],
         [psg.VPush()],
@@ -197,34 +197,35 @@ def game_window(language, points):
         [psg.Text(
             "",
             key='-WORD-',
-            font=(font_used[0], 25))],
+            font=(font_used[0], 25, 'bold'))],
         [psg.Text(
             localization[language]['game.window.used_letters'],
-            font=font_used)],
+            font=(font_used[0], 11))],
         [psg.Text(
             "",
             key='-USED-LETTERS-',
-            font=(font_used, 9))],
+            font=(font_used[0], 10),
+            text_color='light green')],
         [psg.Text(
             localization[language]['game.window.lives'],
-            font=font_used),
+            font=(font_used[0], 11)),
          psg.Text(
              "",
              key='-LIVES-',
-             font=(font_used[0], 16),
+             font=(font_used[0], 20),
              text_color='green'),
          psg.Push(),
          psg.Text(
              str(points),
              key='-POINTS-',
-             font=(font_used[0], 16),
+             font=(font_used[0], 20),
              text_color='green'),
          psg.Text(
              localization[language]['game.window.points'],
-             font=font_used)],
+             font=(font_used[0], 11))],
         [psg.Text(
             localization[language]['game.window.guess_letter'],
-            font=font_used)],
+            font=(font_used[0], 11))],
         [psg.Input(
             "",
             size=(10, 1),
@@ -235,17 +236,17 @@ def game_window(language, points):
             visible=False,
             bind_return_key=True)],
         [psg.Text(
-            "",
-            key='-OUTPUT-Msg-',
-            font=font_used,
-            text_color='yellow')],
+             "",
+             key='-OUTPUT-Msg-',
+             font=font_used,
+             text_color='yellow')],
         [psg.VPush()]
     ]
 
     window = psg.Window(
         "Hangman Game",
         game_layout,
-        size=(300, 570),
+        size=(300, 575),
         element_justification='center',
         finalize=True,
         no_titlebar=True,
@@ -271,13 +272,13 @@ def hangman(points=0):
     # Word letters as a list
     word_letters = list(word)
     # Word blanks as a list
-    word_blanks = ["_"] * len(word)
+    word_blanks = ["-"] * len(word)
     # Number of lives
     lives = 10
     # Letters already used
     guessed_letters = ""
 
-    window['-WORD-'].update("".join(word_blanks), font=(font_used[0], 25))
+    window['-WORD-'].update("".join(word_blanks))
     window['-USED-LETTERS-'].update(localization[language]['game.window.used_letters'].join(guessed_letters))
     window['-HANGMAN-'].update(hangman_img[lives])
     window['-LIVES-'].update(str(lives))
@@ -313,7 +314,7 @@ def hangman(points=0):
                         if word_letters[i] == user_input:
                             word_blanks[i] = word[i]
                     # Output updated word
-                    window["-WORD-"].update("".join(word_blanks), font=(font_used[0], 25))
+                    window["-WORD-"].update("".join(word_blanks))
 
                     # Win condition
                     if "".join(word_blanks) == "".join(word_letters):
@@ -333,7 +334,7 @@ def hangman(points=0):
                     window["-OUTPUT-Msg-"].update(localization[language]['game.window.output_msg_wrong_guess'])
                     window["-HANGMAN-"].update(hangman_img[lives])
                     window["-LIVES-"].update(lives)
-                    window["-WORD-"].update("".join(word_blanks), font=(font_used[0], 25))
+                    window["-WORD-"].update("".join(word_blanks))
                     if lives == 0:
                         choice = psg.popup_yes_no(
                             localization[language]['game.window.you_lost_message'].format(word),

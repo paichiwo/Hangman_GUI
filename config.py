@@ -21,5 +21,4 @@ hangman_img = {
     'settings_icon': './images/settings_icon.png'
 }
 # You might have to install this font
-font_used = ('Roboto Mono', 10)
-
+font_used = ('Consolas', 10)
