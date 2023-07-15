@@ -15,7 +15,6 @@ from wordlist import word_list
 from lang.localization import localization
 from config import version, hangman_img, font_used
 
-
 psg.theme('black')
 
 
@@ -25,6 +24,16 @@ def load_settings():
     with open('settings.json', 'r') as settings_file:
         settings = json.load(settings_file)
         return settings.get('language', 'EN')
+
+
+def load_high_scores():
+    """Load high scores from the .json file"""
+    with open('high_scores.json') as file:
+        scores = json.load(file)
+    return scores
+
+
+print(load_high_scores())
 
 
 def save_settings(settings_dict):
@@ -209,20 +218,20 @@ def game_window(language, points):
         [psg.Text(
             localization[language]['game.window.lives'],
             font=(font_used[0], 11)),
-         psg.Text(
-             "",
-             key='-LIVES-',
-             font=(font_used[0], 20),
-             text_color='green'),
-         psg.Push(),
-         psg.Text(
-             str(points),
-             key='-POINTS-',
-             font=(font_used[0], 20),
-             text_color='green'),
-         psg.Text(
-             localization[language]['game.window.points'],
-             font=(font_used[0], 11))],
+            psg.Text(
+                "",
+                key='-LIVES-',
+                font=(font_used[0], 20),
+                text_color='green'),
+            psg.Push(),
+            psg.Text(
+                str(points),
+                key='-POINTS-',
+                font=(font_used[0], 20),
+                text_color='green'),
+            psg.Text(
+                localization[language]['game.window.points'],
+                font=(font_used[0], 11))],
         [psg.Text(
             localization[language]['game.window.guess_letter'],
             font=(font_used[0], 11))],
@@ -236,10 +245,10 @@ def game_window(language, points):
             visible=False,
             bind_return_key=True)],
         [psg.Text(
-             "",
-             key='-OUTPUT-Msg-',
-             font=font_used,
-             text_color='yellow')],
+            "",
+            key='-OUTPUT-MSG-',
+            font=font_used,
+            text_color='yellow')],
         [psg.VPush()]
     ]
 
@@ -306,7 +315,7 @@ def hangman(points=0):
 
                 # Check if user_input is in the word_letters list
                 if user_input in word_letters:
-                    window["-OUTPUT-Msg-"].update(localization[language]['game.window.output_msg_good_guess'])
+                    window["-OUTPUT-MSG-"].update(localization[language]['game.window.output_msg_good_guess'])
 
                     # Find indexes of a correctly guessed letter
                     for i, letter in enumerate(word_letters):
@@ -331,7 +340,7 @@ def hangman(points=0):
                 # Loose condition
                 else:
                     lives = lives - 1
-                    window["-OUTPUT-Msg-"].update(localization[language]['game.window.output_msg_wrong_guess'])
+                    window["-OUTPUT-MSG-"].update(localization[language]['game.window.output_msg_wrong_guess'])
                     window["-HANGMAN-"].update(hangman_img[lives])
                     window["-LIVES-"].update(lives)
                     window["-WORD-"].update("".join(word_blanks))
@@ -342,20 +351,23 @@ def hangman(points=0):
                         if choice == "Yes":
                             webbrowser.open(link)
                         window.close()
-                        hangman(points)
+                        return points
 
             # Letter already been chosen
             else:
-                window["-OUTPUT-Msg-"].update(localization[language]['game.window.letter_used_message'])
+                window["-OUTPUT-MSG-"].update(localization[language]['game.window.letter_used_message'])
 
     window.close()
+    return points
 
 
 def main():
     """Main function that initializes the game"""
+
     language = load_settings()
     splash_screen(language)
-    hangman()
+    points = hangman()
+    print("Scored points:", points)
 
 
 if __name__ == '__main__':
