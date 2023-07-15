@@ -74,20 +74,16 @@ def secret_word_api():
 
 def word_api_or_random(language):
 
+    try:
+        word = secret_word_api().upper()
+    except (requests.ConnectionError, requests.HTTPError, requests.exceptions.JSONDecodeError):
+        word = random.choice(word_list).upper()
+
     if language == 'EN':
-        try:
-            word = secret_word_api().upper()
-        # Error handling
-        except (requests.ConnectionError, requests.HTTPError, requests.exceptions.JSONDecodeError):
-            word = random.choice(word_list).upper()
         return word
     elif language == 'PL':
-        try:
-            word = secret_word_api().upper()
-        # Error handling
-        except (requests.ConnectionError, requests.HTTPError, requests.exceptions.JSONDecodeError):
-            word = random.choice(word_list).upper()
         return translate_eng_to_pol(word)
+
 
 
 def check_word_meaning_link(word, language):
@@ -276,8 +272,8 @@ def hangman(points=0):
     language = load_settings()
     window = game_window(language, points)
 
-    # list with alphabet
-    alphabet = string.ascii_letters + "ąęóśłżźćń"
+    # alphabet to be used
+    alphabet = string.ascii_letters + 'ąęóśłżźćń'
     # secret word
     word = word_api_or_random(language)
     print(word)
