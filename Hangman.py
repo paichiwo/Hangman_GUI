@@ -363,10 +363,10 @@ def hangman(points=0):
 
 
 def main():
-    if __name__ == '__main__':
-        language = load_settings()
-        splash_screen(language)
-        hangman()
+    language = load_settings()
+    splash_screen(language)
+    hangman()
 
 
-main()
+if __name__ == '__main__':
+    main()
