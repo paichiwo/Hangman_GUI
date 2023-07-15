@@ -93,10 +93,12 @@ def word_api_or_random(language):
 def check_word_meaning_link(word, language):
     # Create a link to check the meaning of the secret word
     if language == "EN":
-        url = f'https://www.google.com/search?q={word.lower()}+meaning'
+        query = word.lower().replace(" ", "+")
+        url = f'https://www.google.com/search?q={query}+meaning'
         return url
     elif language == "PL":
-        url = f'https://www.google.com/search?q={word.lower()}+znaczenie'
+        query = word.lower().replace(" ", "+")
+        url = f'https://www.google.com/search?q={query}+znaczenie'
         return url
 
 
