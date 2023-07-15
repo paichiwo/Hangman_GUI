@@ -78,13 +78,13 @@ def splash_screen(language):
     splash_layout = [
         [psg.Push(),
          psg.Button(
-             image_filename=hangman_img['settings'],
+             image_filename=hangman_img['settings_icon'],
              pad=(0, 2),
              border_width=0,
              button_color='black',
              enable_events=True,
              key='-SETTINGS-')],
-        [psg.Image(hangman_img['splash'])],
+        [psg.Image(hangman_img['splash_logo'])],
         [psg.Button(
             localization[language]['splash.window.start_button'],
             font=(font_used[0], 16),
@@ -173,7 +173,7 @@ def game_window(language, points):
         [psg.VPush()],
         [psg.Push(),
          psg.Image(
-             hangman_img['close'],
+             hangman_img['close_icon'],
              pad=0,
              enable_events=True,
              key='-CLOSE-')],

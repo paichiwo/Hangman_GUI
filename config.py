@@ -3,7 +3,7 @@
 # Current version
 version = "1.0"
 
-# Dictionary with paths for all the images used in the game
+# Paths for all the images used in the game
 hangman_img = {
     10: './images/Hangman_10.png',
     9: './images/Hangman_09.png',
@@ -16,9 +16,9 @@ hangman_img = {
     2: './images/Hangman_02.png',
     1: './images/Hangman_01.png',
     0: './images/Hangman_00.png',
-    'splash_logo': './images/splash.png',
-    'close_icon': './images/close.png',
-    'settings_icon': './images/settings.png'
+    'splash_logo': './images/splash_logo.png',
+    'close_icon': './images/close_icon.png',
+    'settings_icon': './images/settings_icon.png'
 }
 # You might have to install this font
 font_used = ('Roboto Mono', 10)
