@@ -1,45 +1,21 @@
 #!/usr/bin/env python3
 
-# Hangman_GUI main game file with application layout and game logic
-
 # *** ADD FEATURE - High Score
 # ** Make start button nicer
 # * Check if is possible to add an image or something while loading from API
 
-from Wordlist import word_list
-from deep_translator import GoogleTranslator
-from lang.localization import localization
 import PySimpleGUI as psg
 import json
 import random
 import string
 import requests
 import webbrowser
-
-version = "1.0"
-
-# Dictionary with all images used in the game
-hangman_img = {
-    10: "img/Hangman_10.png",
-    9: "img/Hangman_09.png",
-    8: "img/Hangman_08.png",
-    7: "img/Hangman_07.png",
-    6: "img/Hangman_06.png",
-    5: "img/Hangman_05.png",
-    4: "img/Hangman_04.png",
-    3: "img/Hangman_03.png",
-    2: "img/Hangman_02.png",
-    1: "img/Hangman_01.png",
-    0: "img/Hangman_00.png",
-    "splash": "img/splash.png",
-    "close": "img/close.png",
-    "settings": "img/settings.png"
-}
+from deep_translator import GoogleTranslator
+from Wordlist import word_list
+from lang.localization import localization
+from config import version, hangman_img, font_used
 
 
-# Install "RobotoMono-Regular.ttf" (main folder) for the best experience, but the app will still work without it :)
-font_used = ('Roboto Mono', 10)
-# Change theme
 psg.theme('black')
 
 
@@ -83,7 +59,6 @@ def word_api_or_random(language):
         return word
     elif language == 'PL':
         return translate_eng_to_pol(word)
-
 
 
 def check_word_meaning_link(word, language):
@@ -253,7 +228,7 @@ def game_window(language, points):
             text_color='yellow')],
         [psg.VPush()]
     ]
-    # Create the main game window
+
     window = psg.Window(
         "Hangman Game",
         game_layout,
