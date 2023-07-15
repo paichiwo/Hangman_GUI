@@ -20,24 +20,31 @@ psg.theme('black')
 
 
 def load_settings():
+    """Load settings from .json file, if key not found, default language settings will be 'EN'"""
+
     with open('settings.json', 'r') as settings_file:
         settings = json.load(settings_file)
         return settings.get('language', 'EN')
 
 
 def save_settings(settings_dict):
+    """Save settings to .json file"""
+
     with open('settings.json', 'w') as settings_file:
         json.dump(settings_dict, settings_file)
 
 
 def translate_eng_to_pol(word):
+    """Translate any given word to Polish"""
+
     my_translator = GoogleTranslator(source='auto', target='polish')
     result = my_translator.translate(text=word)
     return result
 
 
 def secret_word_api():
-    # Get secret word from API and choose only words <= 12 characters long
+    """Get secret word from API, and choose only words <= 12 characters long"""
+
     url = "https://random-word-api.herokuapp.com/word"
     response = requests.get(url)
     text = response.json()
@@ -49,6 +56,7 @@ def secret_word_api():
 
 
 def word_api_or_random(language):
+    """Get secret word from wordlist.py if the API fails for any reason"""
 
     try:
         word = secret_word_api().upper()
@@ -62,7 +70,8 @@ def word_api_or_random(language):
 
 
 def check_word_meaning_link(word, language):
-    # Create a link to check the meaning of the secret word
+    """Create a link to check the meaning of the secret word"""
+
     if language == "EN":
         query = word.lower().replace(" ", "+")
         url = f'https://www.google.com/search?q={query}+meaning'
@@ -74,7 +83,8 @@ def check_word_meaning_link(word, language):
 
 
 def splash_screen(language):
-    # layout for the splash screen
+    """Layout for the splash screen window"""
+
     splash_layout = [
         [psg.Push(),
          psg.Button(
@@ -127,6 +137,8 @@ def splash_screen(language):
 
 
 def settings_window(lang):
+    """Layout for the settings window"""
+
     layout = [
         [psg.Text(
             localization[lang]['settings.window.title'],
@@ -168,7 +180,8 @@ def settings_window(lang):
 
 
 def game_window(language, points):
-    # Main Game Layout
+    """Layout for the game window"""
+
     game_layout = [
         [psg.VPush()],
         [psg.Push(),
@@ -243,24 +256,25 @@ def game_window(language, points):
 
 
 def hangman(points=0):
-    # Game logic
+    """Hangman game logic"""
+
     language = load_settings()
     window = game_window(language, points)
 
-    # alphabet to be used
+    # Alphabet to be used
     alphabet = string.ascii_letters + 'ąęóśłżźćń'
-    # secret word
+    # Secret word
     word = word_api_or_random(language)
     print(word)
-    # create a Google search link for user to check the meaning of the secret word
+    # Create a Google search link for user to check the meaning of the secret word
     link = check_word_meaning_link(word, language)
-    # word letters as a list
+    # Word letters as a list
     word_letters = list(word)
-    # word blanks as a list
+    # Word blanks as a list
     word_blanks = ["_"] * len(word)
-    # number of lives
+    # Number of lives
     lives = 10
-    # letters already used
+    # Letters already used
     guessed_letters = ""
 
     window['-WORD-'].update("".join(word_blanks), font=(font_used[0], 25))
@@ -268,18 +282,18 @@ def hangman(points=0):
     window['-HANGMAN-'].update(hangman_img[lives])
     window['-LIVES-'].update(str(lives))
 
-    # Main Loop
+    # Game loop
     while lives > 0:
 
         event, values = window.read()
         if event in (psg.WIN_CLOSED, '-CLOSE-'):
             break
 
-        # accepts only one character must be from the alphabet
+        # Accepts only one character, which must be from the alphabet
         if len(values['-INPUT-']) > 1 or values['-INPUT-'] not in alphabet:
             # delete last char from input
             window['-INPUT-'].update(values['-INPUT-'][:-1])
-        # if enter is pressed
+        # If enter is pressed
         elif event == localization[language]['game.window.submit_button']:
             user_input = window["-INPUT-"].get().upper()
             window['-INPUT-'].update("")
@@ -293,15 +307,15 @@ def hangman(points=0):
                 if user_input in word_letters:
                     window["-OUTPUT-Msg-"].update(localization[language]['game.window.output_msg_good_guess'])
 
-                    # find indexes of a correctly guessed letter
+                    # Find indexes of a correctly guessed letter
                     for i, letter in enumerate(word_letters):
                         # and replace blanks with letters
                         if word_letters[i] == user_input:
                             word_blanks[i] = word[i]
-                    # output updated word
+                    # Output updated word
                     window["-WORD-"].update("".join(word_blanks), font=(font_used[0], 25))
 
-                    # win condition
+                    # Win condition
                     if "".join(word_blanks) == "".join(word_letters):
                         points += 1
                         window["-POINTS-"].update(str(points))
@@ -312,7 +326,8 @@ def hangman(points=0):
                             webbrowser.open(link)
                         window.close()
                         hangman(points)
-                # lost condition
+
+                # Loose condition
                 else:
                     lives = lives - 1
                     window["-OUTPUT-Msg-"].update(localization[language]['game.window.output_msg_wrong_guess'])
@@ -328,7 +343,7 @@ def hangman(points=0):
                         window.close()
                         hangman(points)
 
-            # output if a letter already been chosen
+            # Letter already been chosen
             else:
                 window["-OUTPUT-Msg-"].update(localization[language]['game.window.letter_used_message'])
 
@@ -336,6 +351,7 @@ def hangman(points=0):
 
 
 def main():
+    """Main function that initializes the game"""
     language = load_settings()
     splash_screen(language)
     hangman()
