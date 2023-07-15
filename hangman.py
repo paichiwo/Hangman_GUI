@@ -37,7 +37,7 @@ def save_settings(settings_dict):
 def translate_eng_to_pol(word):
     """Translate any given word to Polish"""
 
-    my_translator = GoogleTranslator(source='auto', target='polish')
+    my_translator = GoogleTranslator(source='english', target='polish')
     result = my_translator.translate(text=word)
     return result
 
