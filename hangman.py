@@ -33,9 +33,6 @@ def load_high_scores():
     return scores
 
 
-print(load_high_scores())
-
-
 def save_settings(settings_dict):
     """Save settings to .json file"""
 
@@ -103,7 +100,7 @@ def splash_screen(language):
         [psg.Push(),
          psg.Button(
              image_filename=hangman_img['settings_icon'],
-             pad=(0, 2),
+             pad=(0, 5),
              border_width=0,
              button_color='black',
              enable_events=True,
@@ -111,19 +108,23 @@ def splash_screen(language):
         [psg.Image(hangman_img['splash_logo'])],
         [psg.Button(
             localization[language]['splash.window.start_button'],
-            font=(font_used[0], 18),
+            font=(font_used, 18),
             border_width=0,
             button_color='white',
             key='-START-')],
         [psg.VPush()],
-        [psg.Text("HIGH SCORES:", font=(font_used[0], 11))],
-        [psg.Text(high_scores_string, font=(font_used[0], 11))],
+        [psg.Text(
+            "HIGH SCORES:",
+            font=(font_used, 11))],
+        [psg.Text(
+            high_scores_string,
+            font=(font_used, 11))],
         [psg.Text(
             f"{localization[language]['splash.window.version']}: {version}",
-            font=(font_used[0], 11))],
+            font=(font_used, 11))],
         [psg.Text(
             localization[language]['splash.window.github_link'],
-            font=(font_used[0], 11),
+            font=(font_used, 11),
             text_color='light green',
             enable_events=True,
             key='-LINK-')]
@@ -160,16 +161,22 @@ def settings_window(lang):
             localization[lang]['settings.window.title'],
             font=(font_used, 12))],
         [psg.Text("")],
-        [psg.Text(localization[lang]['settings.window.select_language'])],
+        [psg.Text(
+            localization[lang]['settings.window.select_language'],
+            font=(font_used, 11))],
         [psg.DropDown(
             ["EN", "PL"],
             default_value=lang,
+            font=(font_used, 12),
             text_color='black',
             background_color='light grey',
-
             key='-LANGUAGE-')],
         [psg.Text("")],
-        [psg.Button(localization[lang]['settings.window.save_button'])]
+        [psg.Button(
+            localization[lang]['settings.window.save_button'],
+            font=(font_used, 11),
+            button_color='white',
+            border_width=0)]
     ]
 
     window = psg.Window(
@@ -213,35 +220,35 @@ def game_window(language, points):
         [psg.Text(
             "",
             key='-WORD-',
-            font=(font_used[0], 25, 'bold'))],
+            font=(font_used, 25, 'bold'))],
         [psg.Text(
             localization[language]['game.window.used_letters'],
-            font=(font_used[0], 11))],
+            font=(font_used, 11))],
         [psg.Text(
             "",
             key='-USED-LETTERS-',
-            font=(font_used[0], 10),
+            font=(font_used, 10),
             text_color='light green')],
         [psg.Text(
             localization[language]['game.window.lives'],
-            font=(font_used[0], 11)),
+            font=(font_used, 11)),
             psg.Text(
                 "",
                 key='-LIVES-',
-                font=(font_used[0], 20),
+                font=(font_used, 20),
                 text_color='green'),
             psg.Push(),
             psg.Text(
                 str(points),
                 key='-POINTS-',
-                font=(font_used[0], 20),
+                font=(font_used, 20),
                 text_color='green'),
             psg.Text(
                 localization[language]['game.window.points'],
-                font=(font_used[0], 11))],
+                font=(font_used, 11))],
         [psg.Text(
             localization[language]['game.window.guess_letter'],
-            font=(font_used[0], 11))],
+            font=(font_used, 11))],
         [psg.Input(
             "",
             size=(10, 1),
