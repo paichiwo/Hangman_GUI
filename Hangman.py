@@ -6,7 +6,7 @@
 # ** Make start button nicer
 # * Check if is possible to add an image or something while loading from API
 
-from Wordlist import world_list
+from Wordlist import word_list
 from deep_translator import GoogleTranslator
 from lang.localization import localization
 import PySimpleGUI as psg
@@ -79,14 +79,14 @@ def word_api_or_random(language):
             word = secret_word_api().upper()
         # Error handling
         except (requests.ConnectionError, requests.HTTPError, requests.exceptions.JSONDecodeError):
-            word = random.choice(world_list).upper()
+            word = random.choice(word_list).upper()
         return word
     elif language == 'PL':
         try:
             word = secret_word_api().upper()
         # Error handling
         except (requests.ConnectionError, requests.HTTPError, requests.exceptions.JSONDecodeError):
-            word = random.choice(world_list).upper()
+            word = random.choice(word_list).upper()
         return translate_eng_to_pol(word)
 
 

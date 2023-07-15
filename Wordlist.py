@@ -1,7 +1,7 @@
 # Word list for the Hangman_GUI
 
 # One long string is converted to the list of separate words
-world_list = "adverb, animal, art, beverage, body, building, clothing, color, computer, continent, " \
+word_list = "adverb, animal, art, beverage, body, building, clothing, color, computer, continent, " \
             "dessert, drink, emotion, food, fruit, furniture, geography, instrument, jewelry, job, kitchen, " \
             "language, material, medical, metal, military, music, mythology, occupation, plant, profession, school, " \
             "science, shape, sport, tool, vegetable, weather, word, bat, bold, cat, canvas, coffee, " \
