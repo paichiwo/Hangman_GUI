@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 
-# *** ADD FEATURE - High Score
-# ** Make start button nicer
-# * Check if is possible to add an image or something while loading from API
 
 import PySimpleGUI as psg
 import json
@@ -26,18 +23,44 @@ def load_settings():
         return settings.get('language', 'EN')
 
 
-def load_high_scores():
-    """Load high scores from the .json file"""
-    with open('high_scores.json') as file:
-        scores = json.load(file)
-    return scores
-
-
 def save_settings(settings_dict):
     """Save settings to .json file"""
 
     with open('settings.json', 'w') as settings_file:
         json.dump(settings_dict, settings_file)
+
+
+def load_high_scores():
+    """Load high scores from the .json file"""
+
+    with open('high_scores.json', 'r') as file:
+        scores = json.load(file)
+    return scores
+
+
+def update_high_scores(name, score):
+    """Update high scores in the .json file"""
+
+    scores = load_high_scores()
+
+    # If there are already three high scores and the new score is lower than the lowest score, return
+    if len(scores) >= 3 and score <= min(scores.values()):
+        return
+    # Update the high scores with the new score
+    scores[name] = score
+    # Keep only the top three scores
+    top_scores = dict(sorted(scores.items(), key=lambda x: x[1], reverse=True)[:3])
+    # Save the updated scores to the file
+    with open('high_scores.json', 'w') as file:
+        json.dump(top_scores, file)
+
+
+def create_high_scores_string():
+    high_scores = load_high_scores()
+    high_scores_string = ""
+    for name, score in high_scores.items():
+        high_scores_string += f"{name}  {score}\n"
+    return high_scores_string
 
 
 def translate_eng_to_pol(word):
@@ -91,10 +114,7 @@ def check_word_meaning_link(word, language):
 def splash_screen(language):
     """Layout for the splash screen window"""
 
-    high_scores = load_high_scores()
-    high_scores_string = ""
-    for name, score in high_scores.items():
-        high_scores_string += f"{name} {score}\n"
+    high_scores_string = create_high_scores_string()
 
     splash_layout = [
         [psg.Push(),
@@ -114,8 +134,8 @@ def splash_screen(language):
             key='-START-')],
         [psg.VPush()],
         [psg.Text(
-            "HIGH SCORES:",
-            font=(font_used, 11))],
+            "HIGH SCORES",
+            font=(font_used, 12, 'bold'), text_color='light green')],
         [psg.Text(
             high_scores_string,
             font=(font_used, 11))],
@@ -286,7 +306,7 @@ def hangman(points=0):
     window = game_window(language, points)
 
     # Alphabet to be used
-    alphabet = string.ascii_letters + 'ąęóśłżźćń'
+    alphabet = string.ascii_letters + "ąęóśłżźćń"
     # Secret word
     word = word_api_or_random(language)
     print(word)
@@ -325,11 +345,11 @@ def hangman(points=0):
             # Check if user_input in guessed letters
             if user_input not in guessed_letters:
                 guessed_letters += user_input
-                window["-USED-LETTERS-"].update(", ".join(guessed_letters))
+                window['-USED-LETTERS-'].update(", ".join(guessed_letters))
 
                 # Check if user_input is in the word_letters list
                 if user_input in word_letters:
-                    window["-OUTPUT-MSG-"].update(localization[language]['game.window.output_msg_good_guess'])
+                    window['-OUTPUT-MSG-'].update(localization[language]['game.window.output_msg_good_guess'])
 
                     # Find indexes of a correctly guessed letter
                     for i, letter in enumerate(word_letters):
@@ -337,15 +357,16 @@ def hangman(points=0):
                         if word_letters[i] == user_input:
                             word_blanks[i] = word[i]
                     # Output updated word
-                    window["-WORD-"].update("".join(word_blanks))
+                    window['-WORD-'].update("".join(word_blanks))
 
                     # Win condition
                     if "".join(word_blanks) == "".join(word_letters):
                         points += 1
-                        window["-POINTS-"].update(str(points))
+                        window['-POINTS-'].update(str(points))
                         choice = psg.popup_yes_no(
                             localization[language]['game.window.you_won_message'].format(word),
-                            font=font_used, keep_on_top=True)
+                            font=(font_used, 10),
+                            keep_on_top=True)
                         if choice == "Yes":
                             webbrowser.open(link)
                         window.close()
@@ -354,25 +375,34 @@ def hangman(points=0):
                 # Loose condition
                 else:
                     lives = lives - 1
-                    window["-OUTPUT-MSG-"].update(localization[language]['game.window.output_msg_wrong_guess'])
-                    window["-HANGMAN-"].update(hangman_img[lives])
-                    window["-LIVES-"].update(lives)
-                    window["-WORD-"].update("".join(word_blanks))
+                    window['-OUTPUT-MSG-'].update(localization[language]['game.window.output_msg_wrong_guess'])
+                    window['-HANGMAN-'].update(hangman_img[lives])
+                    window['-LIVES-'].update(lives)
+                    window['-WORD-'].update("".join(word_blanks))
                     if lives == 0:
                         choice = psg.popup_yes_no(
                             localization[language]['game.window.you_lost_message'].format(word),
-                            font=font_used, keep_on_top=True)
+                            font=(font_used, 10),
+                            keep_on_top=True)
                         if choice == "Yes":
                             webbrowser.open(link)
+                        name = psg.popup_get_text(
+                            localization[language]['game.window.enter_name_message'],
+                            localization[language]['game.window.enter_name_title'],
+                            font=font_used,
+                            keep_on_top=True)
+                        if name:
+                            update_high_scores(name, points)
+
                         window.close()
-                        return points
+                        splash_screen(language)
+                        hangman()
 
             # Letter already been chosen
             else:
                 window["-OUTPUT-MSG-"].update(localization[language]['game.window.letter_used_message'])
 
     window.close()
-    return points
 
 
 def main():
@@ -380,8 +410,7 @@ def main():
 
     language = load_settings()
     splash_screen(language)
-    points = hangman()
-    print("Scored points:", points)
+    hangman()
 
 
 if __name__ == '__main__':

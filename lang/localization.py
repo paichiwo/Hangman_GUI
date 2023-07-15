@@ -18,6 +18,8 @@ localization = {
         'game.window.output_msg_wrong_guess': 'Wrong, try again!',
         'game.window.you_won_message': 'YOU WON! \nFind the meaning of: {} ?\n',
         'game.window.you_lost_message': 'YOU LOST! \nFind the meaning of: {} ?\n',
+        'game.window.enter_name_message': 'Congratulations !\nEnter your name:',
+        'game.window.enter_name_title': 'High Score !',
         'game.window.letter_used_message': 'Letter used already!'
     },
 
@@ -39,6 +41,8 @@ localization = {
         'game.window.output_msg_wrong_guess': 'Źle, spróbuj ponownie!',
         'game.window.you_won_message': 'WYGRAŁEŚ! \nZnajdź znaczenie: {} ?\n',
         'game.window.you_lost_message': 'PRZEGRAŁEŚ! \nZnajdź znaczenie: {} ?\n',
+        'game.window.enter_name_message': 'Gratulacje !\nWpisz swoje imię:',
+        'game.window.enter_name_title': 'High Score !',
         'game.window.letter_used_message': 'Litera wykorzystana!'
     }
 }
