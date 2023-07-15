@@ -94,6 +94,11 @@ def check_word_meaning_link(word, language):
 def splash_screen(language):
     """Layout for the splash screen window"""
 
+    high_scores = load_high_scores()
+    high_scores_string = ""
+    for name, score in high_scores.items():
+        high_scores_string += f"{name} {score}\n"
+
     splash_layout = [
         [psg.Push(),
          psg.Button(
@@ -111,6 +116,8 @@ def splash_screen(language):
             button_color='white',
             key='-START-')],
         [psg.VPush()],
+        [psg.Text("HIGH SCORES:", font=(font_used[0], 11))],
+        [psg.Text(high_scores_string, font=(font_used[0], 11))],
         [psg.Text(
             f"{localization[language]['splash.window.version']}: {version}",
             font=(font_used[0], 11))],
