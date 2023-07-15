@@ -11,7 +11,7 @@ import string
 import requests
 import webbrowser
 from deep_translator import GoogleTranslator
-from Wordlist import word_list
+from wordlist import word_list
 from lang.localization import localization
 from config import version, hangman_img, font_used
 
