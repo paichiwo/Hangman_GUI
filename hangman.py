@@ -6,6 +6,8 @@
 #       make splash window image smaller and adjust other elements (too cramped on the bottom)
 
 import PySimpleGUI as psg
+import os
+import sys
 import json
 import random
 import string
@@ -19,10 +21,17 @@ from config import version, hangman_img, font_used
 psg.theme('black')
 
 
+def resource_path(relative_path):
+    """PyInstaller requirement,
+    Get an absolute path to resource, works for dev and for PyInstaller."""
+    base_path = getattr(sys, "_MEIPASS", os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(base_path, relative_path)
+
+
 def load_settings():
     """Load settings from .json file, if key not found, default language settings will be 'EN'"""
 
-    with open('settings.json', 'r') as settings_file:
+    with open(resource_path('settings.json'), 'r') as settings_file:
         settings = json.load(settings_file)
         return settings.get('language', 'EN')
 
@@ -30,14 +39,14 @@ def load_settings():
 def save_settings(settings_dict):
     """Save settings to .json file"""
 
-    with open('settings.json', 'w') as settings_file:
+    with open(resource_path('settings.json'), 'w') as settings_file:
         json.dump(settings_dict, settings_file)
 
 
 def load_high_scores():
     """Load high scores from the .json file"""
 
-    with open('high_scores.json', 'r') as file:
+    with open(resource_path('high_scores.json'), 'r') as file:
         scores = json.load(file)
     return scores
 
@@ -55,7 +64,7 @@ def update_high_scores(name, score):
     # Keep only the top three scores
     top_scores = dict(sorted(scores.items(), key=lambda x: x[1], reverse=True)[:3])
     # Save the updated scores to the file
-    with open('high_scores.json', 'w') as file:
+    with open(resource_path('high_scores.json'), 'w') as file:
         json.dump(top_scores, file)
 
 
@@ -126,13 +135,13 @@ def splash_screen(language):
     splash_layout = [
         [psg.Push(),
          psg.Button(
-             image_filename=hangman_img['settings_icon'],
+             image_filename=resource_path(hangman_img['settings_icon']),
              pad=(0, 5),
              border_width=0,
              button_color='black',
              enable_events=True,
              key='-SETTINGS-')],
-        [psg.Image(hangman_img['splash_logo'])],
+        [psg.Image(resource_path(hangman_img['splash_logo']))],
         [psg.Button(
             localization[language]['splash.window.start_button'],
             font=(font_used, 18),
@@ -142,7 +151,8 @@ def splash_screen(language):
         [psg.VPush()],
         [psg.Text(
             "HIGH SCORES",
-            font=(font_used, 12, 'bold'), text_color='light green')],
+            font=(font_used, 12, 'bold'),
+            text_color='light green')],
         [psg.Text(
             high_scores_string,
             font=(font_used, 11))],
@@ -236,13 +246,13 @@ def game_window(language, points):
         # [psg.VPush()],
         [psg.Push(),
          psg.Image(
-             hangman_img['close_icon'],
+             resource_path(hangman_img['close_icon']),
              pad=(0, 4),
              enable_events=True,
              key='-CLOSE-')],
         [psg.VPush()],
         [psg.Image(
-            hangman_img[10],
+            resource_path(hangman_img[10]),
             key='-HANGMAN-')],
         [psg.Text(
             "",
@@ -330,7 +340,7 @@ def hangman(points=0):
 
     window['-WORD-'].update("".join(word_blanks))
     window['-USED-LETTERS-'].update(localization[language]['game.window.used_letters'].join(guessed_letters))
-    window['-HANGMAN-'].update(hangman_img[lives])
+    window['-HANGMAN-'].update(resource_path(hangman_img[lives]))
     window['-LIVES-'].update(str(lives))
 
     # Game loop
@@ -383,7 +393,7 @@ def hangman(points=0):
                 else:
                     lives = lives - 1
                     window['-OUTPUT-MSG-'].update(localization[language]['game.window.output_msg_wrong_guess'])
-                    window['-HANGMAN-'].update(hangman_img[lives])
+                    window['-HANGMAN-'].update(resource_path(hangman_img[lives]))
                     window['-LIVES-'].update(lives)
                     window['-WORD-'].update("".join(word_blanks))
                     if lives == 0:
