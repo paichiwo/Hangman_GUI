@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-#       make .exe for v1.0 and v1.1
 #       adjust the size of the name input window for high-score
 #       search for better dictionary for words, or api (Polish and english) - translation is sad
 #       make splash window image smaller and adjust other elements (too cramped on the bottom)
@@ -174,8 +173,7 @@ def splash_screen(language):
         element_justification='center',
         finalize=True,
         no_titlebar=True,
-        grab_anywhere=True,
-        keep_on_top=True)
+        grab_anywhere=True)
 
     while True:
         event, values = splash_window.read()
@@ -310,8 +308,7 @@ def game_window(language, points):
         element_justification='center',
         finalize=True,
         no_titlebar=True,
-        grab_anywhere=True,
-        keep_on_top=True)
+        grab_anywhere=True)
 
     return window
 
