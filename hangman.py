@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
-# todo      make .exe for v1.0 and v1.1
-# todo      adjust the size of the name input window for high-score
-# todo      search for better dictionary for words, or api (Polish and english) - translation is sad
-# todo      make splash window image smaller and adjust other elements (too cramped on the bottom)
+#       make .exe for v1.0 and v1.1
+#       adjust the size of the name input window for high-score
+#       search for better dictionary for words, or api (Polish and english) - translation is sad
+#       make splash window image smaller and adjust other elements (too cramped on the bottom)
 
 import PySimpleGUI as psg
 import json
