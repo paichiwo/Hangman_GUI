@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+# todo      make .exe for v1.0 and v1.1
+# todo      adjust the size of the name input window for high-score
+# todo      search for better dictionary for words, or api (Polish and english) - translation is sad
+# todo      make splash window image smaller and adjust other elements (too cramped on the bottom)
 
 import PySimpleGUI as psg
 import json
@@ -56,6 +60,8 @@ def update_high_scores(name, score):
 
 
 def create_high_scores_string():
+    """Create a string to display on the splash screen"""
+
     high_scores = load_high_scores()
     high_scores_string = ""
     for name, score in high_scores.items():
@@ -95,6 +101,7 @@ def word_api_or_random(language):
     if language == 'EN':
         return word.upper()
     elif language == 'PL':
+        print(word)
         return translate_eng_to_pol(word).upper().split(" ")[0]
 
 
@@ -339,7 +346,7 @@ def hangman(points=0):
             window['-INPUT-'].update(values['-INPUT-'][:-1])
         # If enter is pressed
         elif event == localization[language]['game.window.submit_button']:
-            user_input = window["-INPUT-"].get().upper()
+            user_input = window['-INPUT-'].get().upper()
             window['-INPUT-'].update("")
 
             # Check if user_input in guessed letters
@@ -400,7 +407,7 @@ def hangman(points=0):
 
             # Letter already been chosen
             else:
-                window["-OUTPUT-MSG-"].update(localization[language]['game.window.letter_used_message'])
+                window['-OUTPUT-MSG-'].update(localization[language]['game.window.letter_used_message'])
 
     window.close()
 
