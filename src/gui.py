@@ -1,7 +1,7 @@
 import webbrowser
 import PySimpleGUI as psg
-from hangman.config import hangman_img, font_used, version
-from hangman.helpers import create_high_scores_string, resource_path, save_settings
+from src.config import hangman_img, font_used, version
+from src.helpers import create_high_scores_string, resource_path, save_settings
 from lang.localization import localization
 
 

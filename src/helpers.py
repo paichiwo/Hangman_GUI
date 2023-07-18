@@ -16,7 +16,7 @@ def resource_path(relative_path):
 def load_settings():
     """Load settings from .json file, if key not found, default language settings will be 'EN'"""
 
-    with open(resource_path('settings.json'), 'r') as settings_file:
+    with open(resource_path('../data/settings.json'), 'r') as settings_file:
         settings = json.load(settings_file)
         return settings.get('language', 'EN')
 
@@ -24,14 +24,14 @@ def load_settings():
 def save_settings(settings_dict):
     """Save settings to .json file"""
 
-    with open(resource_path('settings.json'), 'w') as settings_file:
+    with open(resource_path('../data/settings.json'), 'w') as settings_file:
         json.dump(settings_dict, settings_file)
 
 
 def load_high_scores():
     """Load high scores from the .json file"""
 
-    with open(resource_path('high_scores.json'), 'r') as file:
+    with open(resource_path('../data/high_scores.json'), 'r') as file:
         scores = json.load(file)
     return scores
 
@@ -49,7 +49,7 @@ def update_high_scores(name, score):
     # Keep only the top three scores
     top_scores = dict(sorted(scores.items(), key=lambda x: x[1], reverse=True)[:3])
     # Save the updated scores to the file
-    with open(resource_path('high_scores.json'), 'w') as file:
+    with open(resource_path('../data/high_scores.json'), 'w') as file:
         json.dump(top_scores, file)
 
 
@@ -87,7 +87,7 @@ def secret_word_api():
 def secret_word_from_list():
     """Get word from word_list.json"""
 
-    with open('word_list.json', 'r') as json_file:
+    with open('../data/word_list.json', 'r') as json_file:
         json_data = json_file.read()
     word_dict = json.loads(json_data)
     word_list = word_dict['word_list']

@@ -1,10 +1,10 @@
 import string
 import webbrowser
 import PySimpleGUI as psg
-from hangman.config import hangman_img, font_used
 from lang.localization import localization
-from hangman.helpers import load_settings, word_api_or_word_list, check_word_meaning, resource_path, update_high_scores
-from hangman.GUI import splash_screen, game_window
+from src.config import hangman_img, font_used
+from src.helpers import load_settings, word_api_or_word_list, check_word_meaning, resource_path, update_high_scores
+from src.gui import splash_screen, game_window
 
 
 def hangman(points=0):

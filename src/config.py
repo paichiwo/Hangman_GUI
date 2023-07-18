@@ -1,7 +1,7 @@
 """Config file for hangman.py"""
 
 # Current version
-version = "1.1.1"
+version = "1.1"
 
 # Paths for all the images used in the game
 hangman_img = {
