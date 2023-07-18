@@ -3,7 +3,7 @@ import webbrowser
 import PySimpleGUI as psg
 from hangman_data.config import hangman_img, font_used
 from lang.localization import localization
-from hangman_data.helpers import load_settings, word_api_or_random, check_word_meaning, resource_path, update_high_scores
+from hangman_data.helpers import load_settings, word_api_or_word_list, check_word_meaning, resource_path, update_high_scores
 from hangman_data.GUI import splash_screen, game_window
 
 
@@ -16,7 +16,7 @@ def hangman(points=0):
     # Alphabet to be used
     alphabet = string.ascii_letters + "ąęóśłżźćń"
     # Secret word
-    word = word_api_or_random(language)
+    word = word_api_or_word_list(language)
     print(word)
     # Create a Google search link for user to check the meaning of the secret word
     link = check_word_meaning(word, language)

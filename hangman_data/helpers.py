@@ -4,7 +4,7 @@ import random
 import sys
 import requests
 from deep_translator import GoogleTranslator
-from hangman_data.wordlist import word_list
+
 
 
 def resource_path(relative_path):
@@ -85,13 +85,24 @@ def secret_word_api():
         return secret_word_api()
 
 
-def word_api_or_random(language):
+def secret_word_from_list():
+    """Get word from word_list.json"""
+
+    with open('word_list.json', 'r') as json_file:
+        json_data = json_file.read()
+    word_dict = json.loads(json_data)
+    word_list = word_dict['word_list']
+
+    return word_list
+
+
+def word_api_or_word_list(language):
     """Get secret word from wordlist.py if the API fails for any reason"""
 
     try:
         word = secret_word_api()
     except (requests.ConnectionError, requests.HTTPError, requests.exceptions.JSONDecodeError):
-        word = random.choice(word_list)
+        word = random.choice(secret_word_from_list())
 
     if language == 'EN':
         return word.upper()
